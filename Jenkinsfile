@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SERVER_IP = credentials('VIETTEL_IP_SERVER')
+        SERVER_IP = credentials('DO_SENTRY2')
     }
 
     stages {
