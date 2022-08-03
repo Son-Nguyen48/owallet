@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SERVER_IP = credentials('DO_SENTRY2')
-        NAME = '''prod_${ env.BUILD_ID }_${ BUILD_NUMBER }.zip'''
+        NAME = '''prod_$env.BUILD_ID_$BUILD_NUMBER.zip'''
     }
 
     stages {
