@@ -12,14 +12,21 @@ pipeline {
                     sh '''
                         ssh -o StrictHostKeyChecking=no -l root $SERVER_IP <<EOF
                             cd /mnt/volume_nyc3_03/owallet
-                            sudo git pull origin develop
+                            git pull origin develop
                             echo "DONE pull source code"
+                    '''
+                }
+
+                sshagent(['phu-cloud']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no -l root $SERVER_IP <<EOF
+                            cd /mnt/volume_nyc3_03/owallet
                             yarn
                             yarn build:libs
                             cd packages/extension
-                            yarn 
+                            yarn
                             yarn build
-                            zip -r /mnt/volume_nyc3_03/oraiscan-backend/static/prod_${env.BUILD_ID}_${env.BUILD_NUMBER}.zip prod/
+                            zip -r /mnt/volume_nyc3_03/oraiscan-backend/static/prod_"${env.BUILD_ID}_${env.BUILD_NUMBER}".zip prod/
                             echo "DONE build artifact"
                     '''
                 }
