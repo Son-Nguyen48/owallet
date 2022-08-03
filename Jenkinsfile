@@ -14,13 +14,6 @@ pipeline {
                             cd /mnt/volume_nyc3_03/owallet
                             sudo git pull origin develop
                             echo "DONE pull source code"
-                    '''
-                }
-
-                sshagent(['phu-cloud']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no -l root $SERVER_IP <<EOF
-                            cd /mnt/volume_nyc3_03/owallet
                             yarn
                             yarn build:libs
                             cd packages/extension
