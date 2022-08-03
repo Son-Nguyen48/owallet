@@ -10,7 +10,7 @@ pipeline {
             steps {
                 sshagent(['phu-cloud']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no -l phutx $SERVER_IP -p 22129 <<EOF
+                        ssh -o StrictHostKeyChecking=no -l root $SERVER_IP <<EOF
                             cd /mnt/volume_nyc3_03/owallet
                             sudo git pull origin develop
                             echo "DONE pull source code"
@@ -19,7 +19,7 @@ pipeline {
 
                 sshagent(['phu-cloud']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no -l orai $SERVER_IP -p 22129 <<EOF
+                        ssh -o StrictHostKeyChecking=no -l root $SERVER_IP <<EOF
                             cd /mnt/volume_nyc3_03/owallet
                             yarn
                             yarn build:libs
