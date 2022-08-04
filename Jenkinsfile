@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SERVER_IP = credentials('DO_SENTRY2')
-        NAME = '''prod_$env.BUILD_ID_$BUILD_NUMBER.zip'''
+        PROD_NAME = "prod_${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -24,11 +24,11 @@ pipeline {
                             cd /mnt/volume_nyc3_03/owallet
                             yarn
                             yarn build:libs
-                            cd packages/extension
                             yarn
+                            cd packages/extension
                             yarn build
-                            zip -r /mnt/volume_nyc3_03/oraiscan-backend/static/$NAME prod/
                             echo "DONE build artifact"
+                            zip -r /mnt/volume_nyc3_03/oraiscan-backend/static/$PROD_NAME prod/
                     '''
                 }
             }
@@ -36,7 +36,7 @@ pipeline {
     }
     post {
         success {
-            discordSend description: '''Build new artifact in url: https://do2.scan.orai.io/$NAME''', footer: '', image: '', link: '', result: '', thumbnail: '', title: '[extension-artifact] [do-sentry2]', webhookURL: 'https://discord.com/api/webhooks/987298208751427584/Nu2Bc6BS5llTmcZjT80q6lpUrzmgE0aA23B7-NmqTAvbMAeBZFNsiYaRMO3kv1cERCQj'
+            discordSend description: "Build new artifact in url: https://do2.scan.orai.io/${env.PROD_NAME}", footer: '', image: '', link: '', result: '', thumbnail: '', title: '[extension-artifact] [do-sentry2]', webhookURL: 'https://discord.com/api/webhooks/987298208751427584/Nu2Bc6BS5llTmcZjT80q6lpUrzmgE0aA23B7-NmqTAvbMAeBZFNsiYaRMO3kv1cERCQj'
         }
     }
 }
