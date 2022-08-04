@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SERVER_IP = credentials('DO_SENTRY2')
-        PROD_NAME = "prod_${env.BUILD_NUMBER}"
+        PROD_NAME = "prod_${env.BUILD_ID}"
     }
 
     stages {
@@ -36,7 +36,7 @@ pipeline {
     }
     post {
         success {
-            discordSend description: "Build new artifact in url: https://do2.scan.orai.io/${env.PROD_NAME}", footer: '', image: '', link: '', result: '', thumbnail: '', title: '[extension-artifact] [do-sentry2]', webhookURL: 'https://discord.com/api/webhooks/987298208751427584/Nu2Bc6BS5llTmcZjT80q6lpUrzmgE0aA23B7-NmqTAvbMAeBZFNsiYaRMO3kv1cERCQj'
+            discordSend description: '''Build new artifact in url: https://do2.scan.orai.io/$PROD_NAME''', footer: '', image: '', link: '', result: '', thumbnail: '', title: '[extension-artifact] [do-sentry2]', webhookURL: 'https://discord.com/api/webhooks/958201849419288638/tiTEM6ekc4pnhbTlaKlNDws1duDcTIRyWp-Yr8dcRXywt9PdqSY0PEWt7TkunkGk1SmV'
         }
     }
 }
