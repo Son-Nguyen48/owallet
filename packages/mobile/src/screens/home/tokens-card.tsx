@@ -17,6 +17,7 @@ import {
 } from '../../utils/helper';
 import { DownArrowIcon } from '../../components/icon';
 import { API } from '../../common/api';
+import ProgressiveImage from '../../components/progessive-image';
 
 // hard code data to test UI
 // const nftsData = [
@@ -127,9 +128,9 @@ export const TokensCard: FunctionComponent<{
             justifyContent: 'center'
           }}
         >
-          <Image
+          <ProgressiveImage
             source={{
-              uri: item.url
+              uri: item.picture ?? item.url
             }}
             style={styles.itemPhoto}
             resizeMode="cover"
@@ -258,43 +259,63 @@ export const TokensCard: FunctionComponent<{
           </CardBody>
         ) : (
           <CardBody>
-            <SectionList
-              stickySectionHeadersEnabled={false}
-              sections={[
-                {
-                  title: 'NFTs',
-                  data: nfts
-                }
-              ]}
-              renderSectionHeader={({ section }) => {
-                {
-                  return (
-                    <>
-                      <View
-                        style={{
-                          marginTop: spacing['12'],
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <Text style={styles.sectionHeader}>
-                          {section.title}
-                        </Text>
-                        <DownArrowIcon color={colors['black']} height={12} />
-                      </View>
+            {nfts.length > 0 ? (
+              <SectionList
+                stickySectionHeadersEnabled={false}
+                sections={[
+                  {
+                    title: 'NFTs',
+                    data: nfts
+                  }
+                ]}
+                renderSectionHeader={({ section }) => {
+                  {
+                    return (
+                      <>
+                        <View
+                          style={{
+                            marginTop: spacing['12'],
+                            flexDirection: 'row'
+                          }}
+                        >
+                          <Text style={styles.sectionHeader}>
+                            {section.title}
+                          </Text>
+                          <DownArrowIcon color={colors['black']} height={12} />
+                        </View>
 
-                      <FlatList
-                        horizontal
-                        data={section.data}
-                        renderItem={_renderFlatlistItem}
-                        keyExtractor={_keyExtract}
-                        showsHorizontalScrollIndicator={false}
-                      />
-                    </>
-                  );
-                }
-              }}
-              renderItem={() => <View />}
-            />
+                        <FlatList
+                          horizontal
+                          data={section.data}
+                          renderItem={_renderFlatlistItem}
+                          keyExtractor={_keyExtract}
+                          showsHorizontalScrollIndicator={false}
+                        />
+                      </>
+                    );
+                  }
+                }}
+                renderItem={() => <View />}
+              />
+            ) : (
+              <View style={styles.transactionListEmpty}>
+                <Image
+                  source={require('../../assets/image/not_found.png')}
+                  resizeMode="contain"
+                  height={142}
+                  width={142}
+                />
+                <Text
+                  style={{
+                    ...typography.subtitle2,
+                    color: colors['gray-300'],
+                    marginTop: spacing['8']
+                  }}
+                >
+                  {`No result found`}
+                </Text>
+              </View>
+            )}
           </CardBody>
         )}
 
@@ -357,11 +378,15 @@ const styles = StyleSheet.create({
     height: (metrics.screenWidth - 84) / 2,
     borderRadius: 10,
     marginHorizontal: 'auto',
-    width: '100%'
+    width: (metrics.screenWidth - 84) / 2
   },
   itemText: {
     ...typography.h7,
     color: colors['gray-900'],
     fontWeight: '700'
+  },
+  transactionListEmpty: {
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
