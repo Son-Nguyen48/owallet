@@ -218,19 +218,39 @@ export const NftsScreen: FunctionComponent = observer(props => {
               ...styles.containerCollection
             }}
           >
-            <Accordion
-              sections={[
-                {
-                  title: 'NFTs',
-                  data: nfts
-                }
-              ]}
-              activeSections={activeSection}
-              renderHeader={_renderHeader}
-              renderContent={_renderContent}
-              onChange={_updateSections}
-              underlayColor={colors['transparent']}
-            />
+            {nfts.length > 0 ? (
+              <Accordion
+                sections={[
+                  {
+                    title: 'NFTs',
+                    data: nfts
+                  }
+                ]}
+                activeSections={activeSection}
+                renderHeader={_renderHeader}
+                renderContent={_renderContent}
+                onChange={_updateSections}
+                underlayColor={colors['transparent']}
+              />
+            ) : (
+              <View style={styles.transactionListEmpty}>
+                <Image
+                  source={require('../../assets/image/not_found.png')}
+                  resizeMode="contain"
+                  height={142}
+                  width={142}
+                />
+                <Text
+                  style={{
+                    ...typography.subtitle2,
+                    color: colors['gray-300'],
+                    marginTop: spacing['8']
+                  }}
+                >
+                  {`No result found`}
+                </Text>
+              </View>
+            )}
           </View>
 
           {/* <TouchableOpacity
@@ -313,5 +333,10 @@ const styles = StyleSheet.create({
   containerSectionTitle: {
     flexDirection: 'row',
     marginBottom: spacing['16']
+  },
+  transactionListEmpty: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 200
   }
 });

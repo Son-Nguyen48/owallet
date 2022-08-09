@@ -54,7 +54,7 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
     >
   >();
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(null);
 
   const smartNavigation = useSmartNavigation();
 
@@ -178,10 +178,45 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
             labelStyle={styles.sendlabelInput}
           />
           <TextInput
-            placeholder="ex. 10"
+            placeholder={`Max: ${nft.quantity}`}
             label="Quantity"
+            error={
+              !quantity || quantity > nft.quantity
+                ? 'Please enter valid quantity'
+                : ''
+            }
             keyboardType={'number-pad'}
+            inputRight={
+              <View
+                style={{
+                  height: 1,
+                  overflow: 'visible',
+                  justifyContent: 'center'
+                }}
+              >
+                <Button
+                  text="MAX"
+                  mode={'light'}
+                  size="small"
+                  containerStyle={{
+                    height: 24,
+                    borderRadius: spacing['8'],
+                    backgroundColor: colors['purple-900'],
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  textStyle={{
+                    color: colors['white'],
+                    textTransform: 'uppercase'
+                  }}
+                  onPress={() => {
+                    setQuantity(nft.quantity);
+                  }}
+                />
+              </View>
+            }
             labelStyle={styles.sendlabelInput}
+            value={quantity?.toString() ?? ''}
             onChangeText={txt => {
               if (Number(txt) > nft.quantity) {
                 setQuantity(nft.quantity);
@@ -210,10 +245,14 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
               borderRadius: 8
             }}
             onPress={async () => {
+              if (!quantity || quantity > nft.quantity) {
+                alert('Please enter valid quantity');
+                return;
+              }
               if (account.isReadyToSendMsgs && txStateIsValid) {
                 try {
                   await account.sendToken(
-                    '0.000001', // amount not in use, but must have to send token fn work normally 'cause we use the same fn with send cw20 token
+                    '0.000001', // amount is not in use, but must have to sendToken fn work normally 'cause we use the same fn with send cw20 token
                     sendConfigs.amountConfig.sendCurrency,
                     sendConfigs.recipientConfig.recipient,
                     sendConfigs.memoConfig.memo,
@@ -242,8 +281,6 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
                     }
                   );
                 } catch (e) {
-                  console.log('send message', e.message);
-
                   if (e?.message === 'Request rejected') {
                     return;
                   }
