@@ -17,6 +17,7 @@ import {
 } from '../../utils/helper';
 import { DownArrowIcon } from '../../components/icon';
 import { API } from '../../common/api';
+import ProgressiveImage from '../../components/progessive-image';
 
 // hard code data to test UI
 // const nftsData = [
@@ -127,9 +128,9 @@ export const TokensCard: FunctionComponent<{
             justifyContent: 'center'
           }}
         >
-          <Image
+          <ProgressiveImage
             source={{
-              uri: item.url
+              uri: item.picture ?? item.url
             }}
             style={styles.itemPhoto}
             resizeMode="cover"
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
     height: (metrics.screenWidth - 84) / 2,
     borderRadius: 10,
     marginHorizontal: 'auto',
-    width: '100%'
+    width: (metrics.screenWidth - 84) / 2
   },
   itemText: {
     ...typography.h7,

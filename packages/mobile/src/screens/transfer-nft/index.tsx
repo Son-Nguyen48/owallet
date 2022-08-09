@@ -20,6 +20,7 @@ import { Buffer } from 'buffer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, metrics, spacing, typography } from '../../themes';
 import { CText as Text } from '../../components/text';
+import ProgressiveImage from '../../components/progessive-image';
 
 const styles = StyleSheet.create({
   sendInputRoot: {
@@ -138,7 +139,7 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
               borderRadius: spacing['8']
             }}
           >
-            <Image
+            <ProgressiveImage
               source={{
                 uri: nft.url
               }}

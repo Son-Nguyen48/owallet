@@ -13,6 +13,7 @@ import { AddIcon, DownArrowIcon } from '../../components/icon';
 import { PageWithScrollViewInBottomTabView } from '../../components/page';
 import Accordion from 'react-native-collapsible/Accordion';
 import { useSmartNavigation } from '../../navigation.provider';
+import ProgressiveImage from '../../components/progessive-image';
 
 // hard code data to test UI
 // const nftsData = [
@@ -121,9 +122,9 @@ export const NftsScreen: FunctionComponent = observer(props => {
         smartNavigation.navigateSmart('Nfts.Detail', { item });
       }}
     >
-      <Image
+      <ProgressiveImage
         source={{
-          uri: item.url
+          uri: item.picture ?? item.url
         }}
         style={styles.itemPhoto}
         resizeMode="cover"
