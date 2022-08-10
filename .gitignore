@@ -13,7 +13,6 @@ yarn-error.log
 build
 build/*
 packages/extension/src/config.ui.var.tsx
-packages/background/
 .cache
 
 coverage
