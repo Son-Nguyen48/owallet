@@ -55,6 +55,8 @@ module.exports = (async () => {
       }
     },
     transformer: {
+      minifierPath: require.resolve('metro-minify-esbuild'),
+      minifierConfig: {},
       babelTransformerPath: require.resolve('react-native-svg-transformer'),
       getTransformOptions: () => ({
         transform: {

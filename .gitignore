@@ -11,8 +11,9 @@ packages/extension/src/config.var.tsx
 yarn-error.log
 
 build
+build/*
 packages/extension/src/config.ui.var.tsx
-
+packages/background/src/ledger
 .cache
 
 coverage

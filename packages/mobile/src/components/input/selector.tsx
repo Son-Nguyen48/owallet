@@ -147,11 +147,7 @@ export const SelectorModal: FunctionComponent<{
                       }
                     }}
                   >
-                    <Text
-                      style={{...styles.label}}
-                    >
-                      {item.label}
-                    </Text>
+                    <Text style={{ ...styles.label }}>{item.label}</Text>
                     {renderBall(item.key === selectedKey)}
                   </RectButton>
                 </View>

@@ -23,6 +23,11 @@ export interface CW20Currency extends Currency {
   readonly contractAddress: string;
 }
 
+export interface ERC20Currency extends Currency {
+  readonly type: 'erc20';
+  readonly contractAddress: string;
+}
+
 export interface Secret20Currency extends Currency {
   readonly type: 'secret20';
   readonly contractAddress: string;
@@ -58,7 +63,8 @@ export type AppCurrency =
   | Currency
   | CW20Currency
   | Secret20Currency
-  | IBCCurrency;
+  | IBCCurrency
+  | ERC20Currency;
 
 export interface FiatCurrency {
   readonly currency: string;

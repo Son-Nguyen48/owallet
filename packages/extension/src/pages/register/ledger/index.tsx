@@ -24,8 +24,7 @@ export const ImportLedgerIntro: FunctionComponent<{
   const { analyticsStore } = useStore();
   return (
     <Button
-      color="primary"
-      outline
+      color=""
       block
       onClick={(e) => {
         e.preventDefault();
@@ -35,6 +34,7 @@ export const ImportLedgerIntro: FunctionComponent<{
           registerType: 'ledger'
         });
       }}
+      className={style.importWalletBtn}
     >
       <FormattedMessage id="register.ledger.title" />
     </Button>
@@ -141,10 +141,11 @@ export const ImportLedgerPage: FunctionComponent<{
         ) : null}
         <AdvancedBIP44Option bip44Option={bip44Option} />
         <Button
-          color="primary"
+          color=""
           type="submit"
           block
           data-loading={registerConfig.isLoading}
+          className={style.nextBtn}
         >
           <FormattedMessage id="register.create.button.next" />
         </Button>

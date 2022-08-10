@@ -6,7 +6,7 @@
 
 .name {
   font-size: 20px;
-  color: #ffffff;
+  color: #23262F;
   font-weight: bold;
 }
 
@@ -16,12 +16,9 @@
 }
 
 .address {
-  border: solid 1px #e6e6e6;
-  border-radius: 100px;
-  padding: 0 16px;
-
   font-size: 12px;
-  color: #F6F7FB;
-
+  color: #777E90;
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }

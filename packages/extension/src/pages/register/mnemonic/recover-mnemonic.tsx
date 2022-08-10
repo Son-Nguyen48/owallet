@@ -58,8 +58,7 @@ export const RecoverMnemonicIntro: FunctionComponent<{
 
   return (
     <Button
-      color="primary"
-      outline
+      color=""
       block
       onClick={(e) => {
         e.preventDefault();
@@ -69,6 +68,7 @@ export const RecoverMnemonicIntro: FunctionComponent<{
           registerType: 'seed'
         });
       }}
+      className={style.importWalletBtn}
     >
       <FormattedMessage id="register.intro.button.import-account.title" />
     </Button>
@@ -249,6 +249,7 @@ export const RecoverMnemonicPage: FunctionComponent<{
             type="submit"
             block
             data-loading={registerConfig.isLoading}
+            className={style.nextBtn}
           >
             <FormattedMessage id="register.create.button.next" />
           </Button>

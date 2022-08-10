@@ -5,7 +5,7 @@ import {
   InteractionForegroundService,
   InteractionWaitingData,
   ApproveInteractionMsg,
-  RejectInteractionMsg
+  RejectInteractionMsg,
 } from '@owallet/background';
 import {
   action,
@@ -13,7 +13,7 @@ import {
   IObservableArray,
   makeObservable,
   flow,
-  toJS
+  toJS,
 } from 'mobx';
 
 export class InteractionStore implements InteractionForegroundHandler {
@@ -59,7 +59,7 @@ export class InteractionStore implements InteractionForegroundHandler {
       this.datas.set(
         data.type,
         observable.array([], {
-          deep: false
+          deep: false,
         })
       );
     }
@@ -74,7 +74,7 @@ export class InteractionStore implements InteractionForegroundHandler {
       this.events.set(
         data.type,
         observable.array([], {
-          deep: false
+          deep: false,
         })
       );
     }
@@ -119,6 +119,7 @@ export class InteractionStore implements InteractionForegroundHandler {
   @flow
   *rejectAll(type: string) {
     const datas = this.getDatas(type);
+
     for (const data of datas) {
       yield this.reject(data.type, data.id);
     }
@@ -131,6 +132,7 @@ export class InteractionStore implements InteractionForegroundHandler {
       const find = this.datas.get(type)!.find((data) => {
         return data.id === id;
       });
+
       if (find) {
         (
           this.datas.get(type) as IObservableArray<InteractionWaitingData>
@@ -146,7 +148,7 @@ export class InteractionStore implements InteractionForegroundHandler {
       this.events.set(
         type,
         observable.array([], {
-          deep: false
+          deep: false,
         })
       );
     }

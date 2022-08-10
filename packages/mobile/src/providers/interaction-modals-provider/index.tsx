@@ -3,6 +3,14 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { SignModal } from '../../modals/sign';
 import { LedgerGranterModal } from '../../modals/ledger';
+import { WalletConnectApprovalModal } from '../../modals/wallet-connect-approval';
+import { WCMessageRequester } from '../../stores/wallet-connect/msg-requester';
+import { WCGoBackToBrowserModal } from '../../modals/wc-go-back-to-browser';
+import { BackHandler, Platform } from 'react-native';
+import { LoadingScreenModal } from '../loading-screen/modal';
+import { KeyRingStatus } from '@owallet/background';
+// import { SignEthereumModal } from '../../modals/sign/sign-ethereum';
+import { navigationRef } from '../../router/root';
 import { HomeBaseModal } from '../../modals/home-base';
 
 export const InteractionModalsProivder: FunctionComponent = observer(
@@ -12,7 +20,7 @@ export const InteractionModalsProivder: FunctionComponent = observer(
       ledgerInitStore,
       permissionStore,
       signInteractionStore,
-      modalStore,
+      modalStore
     } = useStore();
 
     // Example usage
@@ -29,6 +37,7 @@ export const InteractionModalsProivder: FunctionComponent = observer(
         }
       }
     }, [permissionStore, permissionStore.waitingDatas]);
+
     return (
       <React.Fragment>
         {ledgerInitStore.isInitNeeded ? (
@@ -43,6 +52,15 @@ export const InteractionModalsProivder: FunctionComponent = observer(
             close={() => signInteractionStore.rejectAll()}
           />
         ) : null}
+        {/* {signInteractionStore.waitingEthereumData ? (
+          <SignEthereumModal
+            isOpen={true}
+            close={() => {
+              signInteractionStore.rejectAll();
+              navigationRef.current.goBack();
+            }}
+          />
+        ) : null} */}
         {modalStore.getState ? (
           <HomeBaseModal isOpen={true} close={() => modalStore.close()} />
         ) : null}

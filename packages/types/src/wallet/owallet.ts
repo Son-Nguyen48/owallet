@@ -1,4 +1,4 @@
-import { ChainInfo } from '../chain-info';
+import { ChainInfo, NetworkType } from '../chain-info';
 import {
   BroadcastMode,
   AminoSignResponse,
@@ -10,6 +10,7 @@ import {
 import { DirectSignResponse, OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { SecretUtils } from 'secretjs/types/enigmautils';
 import Long from 'long';
+import { SignEthereumTypedDataObject } from '../typedMessage';
 
 export interface Key {
   // Name of the selected key store.
@@ -35,6 +36,7 @@ export interface OWalletSignOptions {
   readonly preferNoSetMemo?: boolean;
 
   readonly disableBalanceCheck?: boolean;
+  readonly networkType?: NetworkType;
 }
 
 export interface OWallet {
@@ -157,6 +159,8 @@ export interface Ethereum {
   // send(): Promise<void>;
   request(args: RequestArguments): Promise<any>;
   signAndBroadcastEthereum(chainId: string, data: object): Promise<{ rawTxHex: string }>;
+  experimentalSuggestChain(chainInfo: ChainInfo): Promise<void>;
+  signEthereumTypeData(chainId: string, data: SignEthereumTypedDataObject): Promise<void>;
   // asyncRequest(): Promise<void>;
   // getKey(chainId: string): Promise<Key>;
 }

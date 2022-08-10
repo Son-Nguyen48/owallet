@@ -14,7 +14,16 @@ import {
   makeADR36AminoSignDoc,
   verifyADR36AminoSignDoc
 } from '@owallet/cosmos';
-import { BIP44HDPath, CommonCrypto, ExportKeyRingData } from './types';
+import {
+  BIP44HDPath,
+  CommonCrypto,
+  ECDSASignature,
+  ExportKeyRingData,
+  MessageTypes,
+  SignEthereumTypedDataObject,
+  SignTypedDataVersion,
+  TypedMessage
+} from './types';
 
 import { KVStore } from '@owallet/common';
 
@@ -37,6 +46,7 @@ import { DirectSignResponse, makeSignBytes } from '@cosmjs/proto-signing';
 import { RNG } from '@owallet/crypto';
 import { cosmos } from '@owallet/cosmos';
 import { Buffer } from 'buffer/';
+import { request } from '../tx';
 
 @singleton()
 export class KeyRingService {
@@ -82,7 +92,7 @@ export class KeyRingService {
 
   async enable(env: Env): Promise<KeyRingStatus> {
     if (this.keyRing.status === KeyRingStatus.EMPTY) {
-      throw new Error("key doesn't exist");
+      throw new OWalletError('keyring', 261, "key doesn't exist");
     }
 
     if (this.keyRing.status === KeyRingStatus.NOTLOADED) {
@@ -264,6 +274,7 @@ export class KeyRingService {
       );
     }
 
+    console.log('sign amino =======');
     const newSignDoc = (await this.interactionService.waitApprove(
       env,
       '/sign',
@@ -334,7 +345,7 @@ export class KeyRingService {
     if (signer !== bech32Address) {
       throw new Error('Signer mismatched');
     }
-    console.log('it gonna be here');
+    console.log('message hereeeeeeee ==============', msgOrigin);
 
     const newSignDocBytes = (await this.interactionService.waitApprove(
       env,
@@ -353,8 +364,6 @@ export class KeyRingService {
     const newSignDoc = cosmos.tx.v1beta1.SignDoc.decode(newSignDocBytes);
 
     try {
-      // it stuck here in ledger
-      console.log('ledger stuck');
       const signature = await this.keyRing.sign(
         env,
         chainId,
@@ -378,47 +387,114 @@ export class KeyRingService {
     chainId: string,
     data: object
   ): Promise<string> {
-    console.log(
-      'in request sign ethereum hahahahahahahhhhhhhhhhhhhhhhhhhhhhhhhhhaahahahaha with data: ',
-      data
-    );
     const coinType = await this.chainsService.getChainCoinType(chainId);
-    const rpc = (await this.chainsService.getChainInfo(chainId)).evmRpc;
+    const rpc = (await this.chainsService.getChainInfo(chainId)).rest;
+    const decimals = (await this.chainsService.getChainInfo(chainId))
+      .feeCurrencies?.[0].coinDecimals;
+
+    console.log(data, 'DATA IN HEREEEEEEEEEEEEEEEEEEEEEEEE');
 
     // TODO: add UI here so users can change gas, memo & fee
-    // const newSignDocBytes = (await this.interactionService.waitApprove(
-    //   env,
-    //   '/sign',
-    //   'request-sign',
-    //   {
-    //     msgOrigin,
-    //     chainId,
-    //     mode: 'direct',
-    //     signDocBytes: cosmos.tx.v1beta1.SignDoc.encode(signDoc).finish(),
-    //     signer,
-    //     signOptions,
-    //   }
-    // )) as Uint8Array;
+    const estimatedGasPrice = await request(rpc, 'eth_gasPrice', []);
+    var estimatedGasLimit = '0x5028';
+    try {
+      estimatedGasLimit = await request(rpc, 'eth_estimateGas', [
+        {
+          ...data,
+          maxFeePerGas: undefined,
+          maxPriorityFeePerGas: undefined
+        }
+      ]);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: service.ts ~ line 396 ~ KeyRingService ~ error',
+        error
+      );
+    }
 
-    // TEMP HARDCODE, need to have a pop up here to change gas & fee
-    // const newSignDoc = cosmos.tx.v1beta1.SignDoc.decode(newSignDocBytes);
-    // const newData = { ...data };
+    console.log(
+      '🚀 ~ file: service.ts ~ line 389 ~ KeyRingService ~ estimatedGasPrice',
+      estimatedGasPrice
+    );
+    console.log(
+      '🚀 ~ file: service.ts ~ line 392 ~ KeyRingService ~ estimatedGasLimit',
+      estimatedGasLimit
+    );
+
+    const approveData = (await this.interactionService.waitApprove(
+      env,
+      '/sign-ethereum',
+      'request-sign-ethereum',
+      {
+        env,
+        chainId,
+        mode: 'direct',
+        data: {
+          ...data,
+          estimatedGasPrice: (data as any)?.gasPrice || estimatedGasPrice,
+          estimatedGasLimit: (data as any)?.gas || estimatedGasLimit,
+          decimals
+        }
+      }
+    )) as any;
+
+    const { gasPrice, gasLimit, memo, fees } = {
+      gasPrice: approveData.gasPrice ?? '0x0',
+      memo: approveData.memo ?? '',
+      gasLimit: approveData.gasLimit,
+      fees: approveData.fees
+    };
+
+    const newData = { ...data, gasPrice, gasLimit, memo, fees };
 
     try {
-      // it stuck here in ledger
-      // console.log('ledger stuck');
       const rawTxHex = await this.keyRing.signAndBroadcastEthereum(
         chainId,
         coinType,
         rpc,
-        data
+        newData
       );
 
       return rawTxHex;
-    } catch (e) {
-      console.log('e', e.message);
     } finally {
-      this.interactionService.dispatchEvent(APP_PORT, 'request-sign-end', {});
+      this.interactionService.dispatchEvent(
+        APP_PORT,
+        'request-sign-ethereum-end',
+        {}
+      );
+    }
+  }
+
+  async requestSignEthereumTypedData(
+    env: Env,
+    chainId: string,
+    data: SignEthereumTypedDataObject
+  ): Promise<ECDSASignature> {
+    console.log(
+      'in request sign ethereum typed data: ',
+      chainId,
+      data.typedMessage,
+      data.version,
+      data.defaultCoinType
+    );
+
+    try {
+      // it stuck here in ledger
+      // console.log('ledger stuck');
+      const rawTxHex = await this.keyRing.signEthereumTypedData({
+        typedMessage: data.typedMessage,
+        version: data.version,
+        chainId,
+        defaultCoinType: data.defaultCoinType
+      });
+
+      return rawTxHex;
+    } finally {
+      this.interactionService.dispatchEvent(
+        APP_PORT,
+        'request-sign-ethereum-end',
+        {}
+      );
     }
   }
 

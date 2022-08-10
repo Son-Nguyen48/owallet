@@ -1,4 +1,4 @@
-@import "../../styles/var";
+@import '../../styles/var';
 
 .container-tx-button {
   display: flex;
@@ -6,12 +6,22 @@
 
   .button {
     flex: 1;
-
+    background-color: $color;
     margin-right: $layout-margin;
-
+    border-radius: 8px !important;
+    border: 1px solid $color !important;
+    box-shadow: none;
     &:last-child {
       margin-right: 0;
     }
+  }
+  .btnSend {
+    color: $color-white;
+    background-color: $color !important;
+  }
+  .btnReceive {
+    color: $color;
+    background-color: $color-white !important;
   }
 }
 

@@ -7,12 +7,7 @@ import React, {
 
 import { Button } from 'reactstrap';
 
-import {
-  Ledger,
-  LedgerInitErrorOn,
-  LedgerWebHIDIniter,
-  LedgerWebUSBIniter
-} from '@owallet/background';
+import { Ledger, LedgerInitErrorOn } from '../../ledger';
 
 import style from './style.module.scss';
 import { EmptyLayout } from '../../layouts/empty-layout';
@@ -84,7 +79,7 @@ export const LedgerGrantPage: FunctionComponent = observer(() => {
 
     try {
       const ledger = await Ledger.init(
-        ledgerInitStore.isWebHID ? LedgerWebHIDIniter : LedgerWebUSBIniter
+        ledgerInitStore.isWebHID ? 'webhid' : 'webusb'
       );
       await ledger.close();
       // Unfortunately, closing ledger blocks the writing to Ledger on background process.

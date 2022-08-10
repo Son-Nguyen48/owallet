@@ -48,7 +48,8 @@ export interface BalanceRegistry {
     chainId: string,
     chainGetter: ChainGetter,
     bech32Address: string,
-    minimalDenom: string
+    minimalDenom: string,
+    currency?: AppCurrency
   ): ObservableQueryBalanceInner | undefined;
 }
 
@@ -96,8 +97,11 @@ export class ObservableQueryBalancesInner {
             this.chainId,
             this.chainGetter,
             this.bech32Address,
-            currency.coinMinimalDenom
+            currency.coinMinimalDenom,
+            currency
           );
+
+          console.log(balanceInner);
 
           if (balanceInner) {
             break;

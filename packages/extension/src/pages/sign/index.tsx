@@ -290,10 +290,10 @@ export const SignPage: FunctionComponent = observer(() => {
               ) : (
                 <React.Fragment>
                   <Button
-                    className={style.button}
-                    color="danger"
+                    className={classnames(style.button, style.rejectBtn)}
+                    color=""
                     disabled={signDocHelper.signDocWrapper == null}
-                    data-loading={signInteractionStore.isLoading}
+                    // data-loading={signInteractionStore.isLoading}
                     onClick={async (e) => {
                       e.preventDefault();
 
@@ -310,15 +310,14 @@ export const SignPage: FunctionComponent = observer(() => {
                         window.close();
                       }
                     }}
-                    outline
                   >
                     {intl.formatMessage({
                       id: 'sign.button.reject'
                     })}
                   </Button>
                   <Button
-                    className={style.button}
-                    color="primary"
+                    className={classnames(style.button, style.approveBtn)}
+                    color=""
                     disabled={approveIsDisabled}
                     data-loading={signInteractionStore.isLoading}
                     onClick={async (e) => {

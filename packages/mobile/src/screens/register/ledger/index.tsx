@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { PageWithScrollView } from '../../../components/page';
 import { TextInput } from '../../../components/input';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { CText as Text } from '../../../components/text'
+import { CText as Text } from '../../../components/text';
 import { useStore } from '../../../stores';
 import { Button } from '../../../components/button';
 import { BIP44AdvancedButton, useBIP44Option } from '../bip44';
@@ -26,7 +26,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-export const NewLedgerScreen: FunctionComponent = observer((props) => {
+export const NewLedgerScreen: FunctionComponent = observer(props => {
   const route = useRoute<
     RouteProp<
       Record<
@@ -60,7 +60,7 @@ export const NewLedgerScreen: FunctionComponent = observer((props) => {
   const [isCreating, setIsCreating] = useState(false);
   const [statusPass, setStatusPass] = useState(false);
   const [statusConfirmPass, setStatusConfirmPass] = useState(false);
-  
+
   const submit = handleSubmit(async () => {
     setIsCreating(true);
 
@@ -106,7 +106,7 @@ export const NewLedgerScreen: FunctionComponent = observer((props) => {
       }}
       style={{
         paddingLeft: 20,
-        paddingRight: 20,
+        paddingRight: 20
       }}
       backgroundColor={colors['white']}
     >
@@ -271,7 +271,7 @@ export const NewLedgerScreen: FunctionComponent = observer((props) => {
           />
         </React.Fragment>
       ) : null}
-        <BIP44AdvancedButton bip44Option={bip44Option} />
+      <BIP44AdvancedButton bip44Option={bip44Option} />
       <View style={{ height: 20 }} />
       <TouchableOpacity
         disabled={isCreating}

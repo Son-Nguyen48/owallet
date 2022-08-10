@@ -7,7 +7,7 @@ import {
   OWalletSignOptions,
   Key,
   EthereumMode,
-  RequestArguments,
+  RequestArguments
 } from '@owallet/types';
 import { BACKGROUND_PORT, MessageRequester } from '@owallet/router';
 import {
@@ -16,7 +16,7 @@ import {
   StdSignDoc,
   StdTx,
   OfflineSigner,
-  StdSignature,
+  StdSignature
 } from '@cosmjs/launchpad';
 
 import {
@@ -33,6 +33,8 @@ import {
   RequestDecryptMsg,
   GetTxEncryptionKeyMsg,
   RequestVerifyADR36AminoSignDoc,
+  RequestSignEthereumTypedDataMsg,
+  SignEthereumTypedDataObject
 } from '@owallet/background';
 import { SecretUtils } from 'secretjs/types/enigmautils';
 
@@ -54,7 +56,7 @@ export class OWallet implements IOWallet {
     public readonly version: string,
     public readonly mode: OWalletMode,
     protected readonly requester: MessageRequester
-  ) { }
+  ) {}
 
   async enable(chainIds: string | string[]): Promise<void> {
     if (typeof chainIds === 'string') {
@@ -113,7 +115,7 @@ export class OWallet implements IOWallet {
     },
     signOptions: OWalletSignOptions = {}
   ): Promise<DirectSignResponse> {
-    console.log("ready to sign direcT!!!!!!!!!!!!!!!!!!!");
+    console.log('ready to sign direcT!!!!!!!!!!!!!!!!');
     const msg = new RequestSignDirectMsg(
       chainId,
       signer,
@@ -123,7 +125,7 @@ export class OWallet implements IOWallet {
         chainId: signDoc.chainId,
         accountNumber: signDoc.accountNumber
           ? signDoc.accountNumber.toString()
-          : null,
+          : null
       },
       deepmerge(this.defaultOptions.sign ?? {}, signOptions)
     );
@@ -135,9 +137,9 @@ export class OWallet implements IOWallet {
         bodyBytes: response.signed.bodyBytes,
         authInfoBytes: response.signed.authInfoBytes,
         chainId: response.signed.chainId,
-        accountNumber: Long.fromString(response.signed.accountNumber),
+        accountNumber: Long.fromString(response.signed.accountNumber)
       },
-      signature: response.signature,
+      signature: response.signature
     };
   }
 
@@ -160,22 +162,22 @@ export class OWallet implements IOWallet {
       sequence: '0',
       fee: {
         gas: '0',
-        amount: [],
+        amount: []
       },
       msgs: [
         {
           type: 'sign/MsgSignData',
           value: {
             signer,
-            data,
-          },
-        },
+            data
+          }
+        }
       ],
-      memo: '',
+      memo: ''
     };
 
     const msg = new RequestSignAminoMsg(chainId, signer, signDoc, {
-      isADR36WithString,
+      isADR36WithString
     });
     return (await this.requester.sendMessage(BACKGROUND_PORT, msg)).signature;
   }
@@ -293,7 +295,9 @@ export class Ethereum implements IEthereum {
     public readonly mode: EthereumMode,
     public chainId: string,
     protected readonly requester: MessageRequester
-  ) { this.chainId = chainId }
+  ) {
+    this.chainId = chainId;
+  }
 
   // async send(): Promise<void> {
   //   console.log('');
@@ -303,9 +307,29 @@ export class Ethereum implements IEthereum {
     return await this.requester.sendMessage(BACKGROUND_PORT, msg);
   }
 
-  async signAndBroadcastEthereum(chainId: string, data: object): Promise<{ rawTxHex: string; }> {
+  async signAndBroadcastEthereum(
+    chainId: string,
+    data: object
+  ): Promise<{ rawTxHex: string }> {
     const msg = new RequestSignEthereumMsg(chainId, data);
     return await this.requester.sendMessage(BACKGROUND_PORT, msg);
+  }
+
+  async experimentalSuggestChain(chainInfo: ChainInfo): Promise<void> {
+    const msg = new SuggestChainInfoMsg(chainInfo);
+    console.log(
+      '🚀 ~ file: core.ts ~ line 313 ~ Ethereum ~ experimentalSuggestChain ~ chainInfo',
+      chainInfo
+    );
+    await this.requester.sendMessage(BACKGROUND_PORT, msg);
+  }
+
+  async signEthereumTypeData(
+    chainId: string,
+    data: SignEthereumTypedDataObject
+  ): Promise<void> {
+    const msg = new RequestSignEthereumTypedDataMsg(chainId, data);
+    await this.requester.sendMessage(BACKGROUND_PORT, msg);
   }
 
   // async sign()

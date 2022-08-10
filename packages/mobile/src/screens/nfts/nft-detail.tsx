@@ -1,36 +1,44 @@
 import React, {
   FunctionComponent,
-  ReactElement,
+  // ReactElement,
   useEffect,
   useState
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { StyleSheet, View, ViewStyle, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  // ViewStyle,
+  Image,
+  ActivityIndicator
+  // TouchableWithoutFeedback,
+  // Keyboard
+} from 'react-native';
 import { Text } from '@rneui/base';
-import { CoinPretty } from '@owallet/unit';
+// import { CoinPretty } from '@owallet/unit';
 import { useSmartNavigation } from '../../navigation.provider';
-import { Currency } from '@owallet/types';
-import { TokenSymbol } from '../../components/token-symbol';
-import { DenomHelper } from '@owallet/common';
-import { Bech32Address } from '@owallet/cosmos';
+// import { Currency } from '@owallet/types';
+// import { TokenSymbol } from '../../components/token-symbol';
+import { DenomHelper, EthereumEndpoint } from '@owallet/common';
+// import { Bech32Address } from '@owallet/cosmos';
 import { colors, metrics, spacing, typography } from '../../themes';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+// import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import {
   convertAmount,
-  formatContractAddress,
+  // formatContractAddress,
   _keyExtract
 } from '../../utils/helper';
 import {
-  QuantityIcon,
-  SendIcon,
-  TransactionMinusIcon
+  QuantityIcon
+  // SendIcon,
+  // TransactionMinusIcon
 } from '../../components/icon';
 import LinearGradient from 'react-native-linear-gradient';
 import {
-  BuyIcon,
-  DepositIcon,
+  // BuyIcon,
+  // DepositIcon,
   SendDashboardIcon
 } from '../../components/icon/button';
 import {
@@ -39,6 +47,9 @@ import {
 } from '../transactions/components';
 import { PageWithScrollViewInBottomTabView } from '../../components/page';
 import { API } from '../../common/api';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { useSendTxConfig } from '@owallet/hooks';
+import ProgressiveImage from '../../components/progessive-image';
 
 const ORAI = 'oraichain-token';
 const AIRI = 'airight';
@@ -46,13 +57,52 @@ const AIRI = 'airight';
 const commonDenom = { ORAI, AIRI };
 
 export const NftDetailScreen: FunctionComponent = observer(props => {
-  const _onPressBtnMain = () => {};
+  const smartNavigation = useSmartNavigation();
+  const { chainStore, accountStore, queriesStore, modalStore } = useStore();
+  const route = useRoute<
+    RouteProp<
+      Record<
+        string,
+        {
+          chainId?: string;
+          currency?: string;
+          recipient?: string;
+        }
+      >,
+      string
+    >
+  >();
+  const chainId = route?.params?.chainId
+    ? route?.params?.chainId
+    : chainStore?.current?.chainId;
 
-  const [prices, setPrices] = useState({});
+  const account = accountStore.getAccount(chainId);
+  const queries = queriesStore.get(chainId);
+
+  const [loading, setLoading] = useState(false);
+
+  const sendConfigs = useSendTxConfig(
+    chainStore,
+    chainId,
+    account.msgOpts['send'],
+    account.bech32Address,
+    queries.queryBalances,
+    EthereumEndpoint
+  );
 
   const { item } = props.route?.params;
 
-  console.log(' item', item);
+  const _onPressTransfer = async () => {
+    smartNavigation.navigateSmart('TransferNFT', {
+      nft: {
+        ...item,
+        quantity: item.version === 1 ? 1 : owner.availableQuantity
+      }
+    });
+  };
+
+  const [prices, setPrices] = useState({});
+  const [owner, setOwner] = useState<any>({});
 
   useEffect(() => {
     (async function get() {
@@ -67,6 +117,30 @@ export const NftDetailScreen: FunctionComponent = observer(props => {
       } catch (error) {}
     })();
   }, []);
+
+  useEffect(() => {
+    (async function get() {
+      try {
+        setLoading(true);
+        const res = await API.getNFTOwners(
+          {
+            token_id: item.id
+          },
+          {
+            baseURL: 'https://api.airight.io/'
+          }
+        );
+
+        const currentOwner = res.data.find(
+          d => d.ownerAddress === account.bech32Address
+        );
+        setLoading(false);
+        setOwner(currentOwner);
+      } catch (error) {}
+    })();
+  }, []);
+
+  console.log('item.url', item);
 
   return (
     <PageWithScrollViewInBottomTabView>
@@ -112,9 +186,9 @@ export const NftDetailScreen: FunctionComponent = observer(props => {
           </View>
 
           <View style={styles.containerImage}>
-            <Image
+            <ProgressiveImage
               source={{
-                uri: item.url
+                uri: item.picture ?? item.url
               }}
               style={{
                 width: metrics.screenWidth - 110,
@@ -176,36 +250,64 @@ export const NftDetailScreen: FunctionComponent = observer(props => {
                     color: colors['gray-150']
                   }}
                 >
-                  {item.totalQuantity - item.availableQuantity}
+                  {item.version === 1 ? 1 : owner?.availableQuantity}
                 </Text>
               </View>
             </View>
           </View>
 
           <View style={styles.containerBtn}>
-            {/* {['Transfer'].map((e, i) => (
-              <TouchableOpacity
-                style={{
-                  ...styles.btn
-                }}
-                onPress={() => _onPressBtnMain()}
-              >
-                <View style={{ ...styles.btnTransfer }}>
-                  <SendDashboardIcon />
-                  <Text
+            {loading ? <ActivityIndicator /> : null}
+            {item.version === 1 && item.offer != null
+              ? ['Transfer'].map((e, i) => (
+                  <TouchableOpacity
                     style={{
-                      ...typography['h7'],
-                      lineHeight: spacing['20'],
-                      color: colors['white'],
-                      paddingLeft: spacing['6'],
-                      fontWeight: '700'
+                      ...styles.btn
                     }}
+                    onPress={() => _onPressTransfer()}
                   >
-                    {`Transfer`}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))} */}
+                    <View style={{ ...styles.btnTransfer }}>
+                      <SendDashboardIcon />
+                      <Text
+                        style={{
+                          ...typography['h7'],
+                          lineHeight: spacing['20'],
+                          color: colors['white'],
+                          paddingLeft: spacing['6'],
+                          fontWeight: '700'
+                        }}
+                      >
+                        {`Transfer`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              : null}
+            {item.version === 2 && owner.availableQuantity > 0
+              ? ['Transfer'].map((e, i) => (
+                  <TouchableOpacity
+                    style={{
+                      ...styles.btn
+                    }}
+                    onPress={() => _onPressTransfer()}
+                  >
+                    <View style={{ ...styles.btnTransfer }}>
+                      <SendDashboardIcon />
+                      <Text
+                        style={{
+                          ...typography['h7'],
+                          lineHeight: spacing['20'],
+                          color: colors['white'],
+                          paddingLeft: spacing['6'],
+                          fontWeight: '700'
+                        }}
+                      >
+                        {`Transfer`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              : null}
           </View>
         </LinearGradient>
       </View>

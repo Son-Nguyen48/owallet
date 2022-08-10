@@ -9,7 +9,7 @@ import { signatureImport } from 'secp256k1';
 export enum LedgerInitErrorOn {
   Transport,
   App,
-  Unknown,
+  Unknown
 }
 
 export const LedgerWebUSBIniter: TransportIniter = async () => {
@@ -85,7 +85,7 @@ export class Ledger {
       minor: result.minor,
       patch: result.patch,
       targetId: result.target_id,
-      testMode: result.test_mode,
+      testMode: result.test_mode
     };
   }
 

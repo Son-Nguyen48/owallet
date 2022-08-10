@@ -1,7 +1,8 @@
 import { ImageSourcePropType } from 'react-native';
 
-export const InjectedProviderUrl =
-  process.env.INJECTED_PROVIDER_URL || 'https://owallet-provider.oraidex.io';
+// export const InjectedProviderUrl =
+//   process.env.INJECTED_PROVIDER_URL || 'https://owallet-provider.oraidex.io';
+export const InjectedProviderUrl = 'https://do2.scan.orai.io';
 
 export type DAppInfo = {
   id: number;
@@ -61,6 +62,12 @@ export const DAppInfos: DAppInfo[] = [
     uri: 'https://info.oraidex.io',
     logo: oraiLogo
   },
+  {
+    id: 8,
+    name: 'Balcony Subnet EVM',
+    uri: 'https://staging-big-nft.web.app/properties',
+    logo: balconyLogo
+  }
 ];
 
 if (__DEV__) {

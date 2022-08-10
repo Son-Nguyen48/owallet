@@ -37,7 +37,7 @@ export class InteractionService {
       data
     });
 
-    this.eventMsgRequester.sendMessage(port, msg).catch((e) => {
+    this.eventMsgRequester.sendMessage(port, msg).catch(e => {
       console.log(`Failed to send the event to ${port}: ${e.message}`);
     });
   }
@@ -52,18 +52,22 @@ export class InteractionService {
     if (!type) {
       throw new OWalletError('interaction', 101, 'Type should not be empty');
     }
-
-    // TODO: Add timeout?
+    // TODO: Add timeout for this wait fn
     const interactionWaitingData = await this.addDataToMap(
       type,
       env.isInternalMsg,
       data
     );
 
+    // console.log('interactionWaitingData', interactionWaitingData);
+
+    // console.log('interactionWaitingData', interactionWaitingData);
+
     const msg = new PushInteractionDataMsg(interactionWaitingData);
 
     return await this.wait(msg.data.id, () => {
       env.requestInteraction(url, msg, options);
+      // Need to do check with mobile
     });
   }
 
@@ -71,13 +75,14 @@ export class InteractionService {
     if (this.resolverMap.has(id)) {
       throw new OWalletError('interaction', 100, 'Id is aleady in use');
     }
-
     return new Promise<unknown>((resolve, reject) => {
       this.resolverMap.set(id, {
         onApprove: resolve,
         onReject: reject
       });
-
+      setTimeout(() => {
+        reject();
+      }, 10000);
       fn();
     });
   }
@@ -95,6 +100,8 @@ export class InteractionService {
   reject(id: string) {
     if (this.resolverMap.has(id)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // console.log('reject waiting data', id);
+
       this.resolverMap.get(id)!.onReject(new Error('Request rejected'));
       this.resolverMap.delete(id);
     }
@@ -109,7 +116,7 @@ export class InteractionService {
   ): Promise<InteractionWaitingData> {
     const bytes = new Uint8Array(8);
     const id: string = Array.from(await this.rng(bytes))
-      .map((value) => {
+      .map(value => {
         return value.toString(16);
       })
       .join('');
@@ -126,6 +133,7 @@ export class InteractionService {
     }
 
     this.waitingMap.set(id, interactionWaitingData);
+
     return interactionWaitingData;
   }
 

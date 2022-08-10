@@ -21,7 +21,7 @@ import {
   checkRouterPaddingBottomBar
 } from '../../../router/root';
 import { OWalletLogo } from '../owallet-logo';
-import { colors, typography } from '../../../themes';
+import { colors } from '../../../themes';
 
 interface FormData {
   name: string;
@@ -29,7 +29,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-export const NewMnemonicScreen: FunctionComponent = observer((props) => {
+export const NewMnemonicScreen: FunctionComponent = observer(props => {
   const route = useRoute<
     RouteProp<
       Record<
@@ -82,7 +82,7 @@ export const NewMnemonicScreen: FunctionComponent = observer((props) => {
       smartNavigation.navigateSmart('Register.VerifyMnemonic', {
         registerConfig,
         newMnemonicConfig,
-        bip44HDPath: bip44Option.bip44HDPath,
+        bip44HDPath: bip44Option.bip44HDPath
       });
     }
   });
@@ -358,7 +358,7 @@ const WordsCard: FunctionComponent<{
         borderRadius: 8,
         display: 'flex',
         flexDirection: 'row',
-        flexWrap: "wrap",
+        flexWrap: 'wrap'
       }}
     >
       {words.map((word, i) => {
@@ -378,7 +378,7 @@ const WordsCard: FunctionComponent<{
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'flex-end',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <TouchableOpacity

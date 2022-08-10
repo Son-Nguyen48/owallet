@@ -22,7 +22,7 @@
     "test": "jest --detectOpenHandles",
     "postinstall": "patch-package && cd ../../ && yarn patch-package",
     "code-push-ios": "appcenter codepush release-react -a Oraichain/Owallet -t 0.0.5 --output-dir build",
-    "code-push-android": "appcenter codepush release-react -a Oraichain/Owallet-1 -t 1.0.2 --output-dir build"
+    "code-push-android": "appcenter codepush release-react -a Oraichain/Owallet-1 -t 1.0.1 --output-dir build"
   },
   "dependencies": {
     "@amplitude/react-native": "^2.7.0",
@@ -67,6 +67,8 @@
     "appcenter-analytics": "^4.1.0",
     "bip39": "^3.0.4",
     "buffer": "^6.0.3",
+    "esbuild": "^0.14.49",
+    "metro-minify-esbuild": "^0.2.0",
     "delay": "^5.0.0",
     "eventemitter3": "^4.0.7",
     "expo-clipboard": "1.0.1",
@@ -122,6 +124,7 @@
     "utility-types": "^3.10.0"
   },
   "devDependencies": {
+    "appcenter-cli": "^2.10.10",
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-decorators": "^7.13.5",

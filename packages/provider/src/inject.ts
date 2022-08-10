@@ -29,6 +29,7 @@ import { CosmJSOfflineSigner, CosmJSOfflineSignerOnlyAmino } from './cosmjs';
 import deepmerge from 'deepmerge';
 import Long from 'long';
 import { NAMESPACE, NAMESPACE_ETHEREUM } from './constants';
+import { SignEthereumTypedDataObject } from '@owallet/types/build/typedMessage';
 
 export interface ProxyRequest {
   type: 'proxy-request';
@@ -60,7 +61,7 @@ export class InjectedOWallet implements IOWallet {
     } = {
       addMessageListener: (fn: (e: any) => void) =>
         window.addEventListener('message', fn),
-      postMessage: (message) =>
+      postMessage: message =>
         window.postMessage(message, window.location.origin)
     },
     parseMessage?: (message: any) => any
@@ -125,10 +126,6 @@ export class InjectedOWallet implements IOWallet {
         const result =
           message.method === 'signDirect'
             ? await (async () => {
-                console.log(
-                  'before sign docs ???????????????????????????????????????'
-                );
-
                 const receivedSignDoc: {
                   bodyBytes?: Uint8Array | null;
                   authInfoBytes?: Uint8Array | null;
@@ -194,7 +191,7 @@ export class InjectedOWallet implements IOWallet {
   protected requestMethod(method: keyof IOWallet, args: any[]): Promise<any> {
     const bytes = new Uint8Array(8);
     const id: string = Array.from(crypto.getRandomValues(bytes))
-      .map((value) => {
+      .map(value => {
         return value.toString(16);
       })
       .join('');
@@ -258,7 +255,7 @@ export class InjectedOWallet implements IOWallet {
         window.addEventListener('message', fn),
       removeMessageListener: (fn: (e: any) => void) =>
         window.removeEventListener('message', fn),
-      postMessage: (message) =>
+      postMessage: message =>
         window.postMessage(message, window.location.origin)
     },
     protected readonly parseMessage?: (message: any) => any
@@ -331,9 +328,6 @@ export class InjectedOWallet implements IOWallet {
       chainId: string;
       accountNumber: string;
     } = result.signed;
-
-    console.log('accountNumber', signed);
-    console.log('signed message after sign direct: ', signed);
 
     return {
       signed: {
@@ -473,7 +467,7 @@ export class InjectedEthereum implements Ethereum {
     } = {
       addMessageListener: (fn: (e: any) => void) =>
         window.addEventListener('message', fn),
-      postMessage: (message) =>
+      postMessage: message =>
         window.postMessage(message, window.location.origin)
     },
     parseMessage?: (message: any) => any
@@ -487,7 +481,7 @@ export class InjectedEthereum implements Ethereum {
       // filter proxy-request by namespace
       if (
         !message ||
-        message.type !== 'proxy-request' ||
+        message.type !== NAMESPACE_ETHEREUM + 'proxy-request' ||
         message.namespace !== NAMESPACE_ETHEREUM
       ) {
         return;
@@ -518,26 +512,32 @@ export class InjectedEthereum implements Ethereum {
           ? this.chainId
           : ethereum.chainId;
 
+        console.log(
+          '🚀 ~ file: inject.ts ~ line 524 ~ InjectedEthereum ~ eventListener.addMessageListener ~ message.method',
+          message.method
+        );
+        // alert(message.method);
         switch (message.method) {
+          case 'eth_signTypedData_v4':
+            await ethereum.signEthereumTypeData(chainId, message.args[0]);
+            break;
+          case 'wallet_addEthereumChain':
+            await ethereum.experimentalSuggestChain(message.args[0]);
+            break;
           case 'eth_sendTransaction' as any:
             result = await (async () => {
-              console.log(
-                'message before signing raw ethereum xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: ',
-                message.args
-              );
-
               const { rawTxHex } = await ethereum.signAndBroadcastEthereum(
                 chainId,
                 message.args[0][0] // TODO: is this okay to assume that we only need the first item of the params?
               );
 
-              console.log('raw tx hex after START PROXY: ', rawTxHex); // this is the transaction hash already
-
               return rawTxHex;
             })();
             break;
           case 'eth_chainId' as any:
-            result = chainId;
+            if (chainId?.toString()?.startsWith('0x')) {
+              result = chainId;
+            } else result = '0x0';
             break;
           case 'wallet_switchEthereumChain' as any:
             this.chainId = await ethereum.request({
@@ -545,13 +545,29 @@ export class InjectedEthereum implements Ethereum {
               params: message.args[0],
               chainId
             });
+            result = this.chainId;
+            break;
+          case 'eth_getTransactionReceipt' as any:
+            try {
+              result = await ethereum.request({
+                method: message.method as string,
+                params: message.args[0],
+                chainId
+              });
+            } catch (error) {
+              // Will catch here if receipt is not ready yet
+              console.log('Error on getting receipt: ', error);
+            }
             break;
           default:
-            result = await ethereum.request({
-              method: message.method as string,
-              params: message.args[0],
-              chainId
-            });
+            try {
+              result = await ethereum.request({
+                method: message.method as string,
+                params: message.args[0],
+                chainId
+              });
+            } catch (error) {}
+
             break;
         }
 
@@ -586,13 +602,13 @@ export class InjectedEthereum implements Ethereum {
   ): Promise<any> {
     const bytes = new Uint8Array(8);
     const id: string = Array.from(crypto.getRandomValues(bytes))
-      .map((value) => {
+      .map(value => {
         return value.toString(16);
       })
       .join('');
 
     const proxyMessage: ProxyRequest = {
-      type: 'proxy-request',
+      type: (NAMESPACE_ETHEREUM + 'proxy-request') as any,
       namespace: NAMESPACE_ETHEREUM,
       id,
       method,
@@ -605,8 +621,6 @@ export class InjectedEthereum implements Ethereum {
           ? this.parseMessage(e.data)
           : e.data;
 
-        console.log('proxy response: ', proxyResponse);
-
         if (!proxyResponse || proxyResponse.type !== 'proxy-request-response') {
           return;
         }
@@ -617,6 +631,7 @@ export class InjectedEthereum implements Ethereum {
 
         this.eventListener.removeMessageListener(receiveResponse);
         const result = JSONUint8Array.unwrap(proxyResponse.result);
+        console.log('Result proxy request: ', result);
 
         if (!result) {
           reject(new Error('Result is null'));
@@ -650,7 +665,7 @@ export class InjectedEthereum implements Ethereum {
         window.addEventListener('message', fn),
       removeMessageListener: (fn: (e: any) => void) =>
         window.removeEventListener('message', fn),
-      postMessage: (message) =>
+      postMessage: message =>
         window.postMessage(message, window.location.origin)
     },
     protected readonly parseMessage?: (message: any) => any
@@ -675,6 +690,25 @@ export class InjectedEthereum implements Ethereum {
   ): Promise<{ rawTxHex: string }> {
     console.log('console.log sign');
     return { rawTxHex: '' };
+  }
+
+  async experimentalSuggestChain(chainInfo: ChainInfo): Promise<void> {
+    // await this.requestMethod('evmSuggestChain', [chainInfo]);
+    console.log('WILL NOT USE');
+  }
+
+  // async on(method: string, cb: any): Promise<void> {
+  //   // await this.requestMethod('evmSuggestChain', [chainInfo]);
+  //   console.log("WILL NOT USE")
+  //   window.addEventListener(method, cb)
+  // }
+
+  async signEthereumTypeData(
+    chainId: string,
+    data: SignEthereumTypedDataObject
+  ): Promise<void> {
+    console.log('WILL NOT USE');
+    return;
   }
 
   // async asyncRequest(): Promise<void> {

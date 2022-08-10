@@ -60,24 +60,27 @@ export class PermissionService {
     origin: string
   ) {
     // Try to unlock the key ring before checking or granting the basic permission.
-    await this.keyRingService.enable(env);
-
-    if (typeof chainIds === 'string') {
-      chainIds = [chainIds];
-    }
-
-    const ungrantedChainIds: string[] = [];
-    for (const chainId of chainIds) {
-      if (!this.hasPermisson(chainId, getBasicAccessPermissionType(), origin)) {
-        ungrantedChainIds.push(chainId);
+    try {
+      await this.keyRingService.enable(env);
+      if (typeof chainIds === 'string') {
+        chainIds = [chainIds];
       }
-    }
+      const ungrantedChainIds: string[] = [];
+      for (const chainId of chainIds) {
+        if (
+          !this.hasPermisson(chainId, getBasicAccessPermissionType(), origin)
+        ) {
+          ungrantedChainIds.push(chainId);
+        }
+      }
 
-    if (ungrantedChainIds.length > 0) {
-      await this.grantBasicAccessPermission(env, ungrantedChainIds, [origin]);
+      if (ungrantedChainIds.length > 0) {
+        await this.grantBasicAccessPermission(env, ungrantedChainIds, [origin]);
+      }
+      await this.checkBasicAccessPermission(env, chainIds, origin);
+    } catch (error) {
+      // alert(JSON.stringify(error));
     }
-
-    await this.checkBasicAccessPermission(env, chainIds, origin);
   }
 
   async grantPermission(
@@ -96,7 +99,6 @@ export class PermissionService {
       type,
       origins
     };
-
     await this.interactionService.waitApprove(
       env,
       url,
@@ -107,23 +109,38 @@ export class PermissionService {
     await this.addPermission(chainIds, type, origins);
   }
 
+  private parseChainId({ chainId }: { chainId: string }): {
+    chainId: string;
+    isEvm: boolean;
+  } {
+    if (!chainId)
+      throw new Error('Invalid empty chain id when switching Ethereum chain');
+    if (chainId.substring(0, 2) === '0x')
+      return { chainId: parseInt(chainId, 16).toString(), isEvm: true };
+    return { chainId, isEvm: false };
+  }
+
   async grantBasicAccessPermission(
     env: Env,
     chainIds: string[],
     origins: string[]
   ) {
-    for (const chainId of chainIds) {
-      // Make sure that the chain info is registered.
-      await this.chainsService.getChainInfo(chainId);
+    try {
+      for (const chainId of chainIds) {
+        // Make sure that the chain info is registered.
+        // const parsedChainId = this.parseChainId({ chainId }).chainId
+        await this.chainsService.getChainInfo(chainId);
+      }
+      await this.grantPermission(
+        env,
+        '/access',
+        chainIds,
+        getBasicAccessPermissionType(),
+        origins
+      );
+    } catch (error) {
+      // alert(JSON.stringify(error));
     }
-
-    await this.grantPermission(
-      env,
-      '/access',
-      chainIds,
-      getBasicAccessPermissionType(),
-      origins
-    );
   }
 
   checkPermission(env: Env, chainId: string, type: string, origin: string) {
@@ -143,6 +160,7 @@ export class PermissionService {
   ) {
     for (const chainId of chainIds) {
       // Make sure that the chain info is registered.
+      // const parsedChainId = this.parseChainId({ chainId }).chainId
       await this.chainsService.getChainInfo(chainId);
 
       this.checkPermission(

@@ -43,8 +43,8 @@ function trimWordsStr(str: string): string {
   // Split on the whitespace or new line.
   const splited = str.split(/\s+/);
   const words = splited
-    .map((word) => word.trim())
-    .filter((word) => word.trim().length > 0);
+    .map(word => word.trim())
+    .filter(word => word.trim().length > 0);
   return words.join(' ');
 }
 
@@ -55,7 +55,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-export const RecoverMnemonicScreen: FunctionComponent = observer((props) => {
+export const RecoverMnemonicScreen: FunctionComponent = observer(props => {
   const route = useRoute<
     RouteProp<
       Record<
@@ -92,7 +92,6 @@ export const RecoverMnemonicScreen: FunctionComponent = observer((props) => {
     setIsCreating(true);
 
     const mnemonic = trimWordsStr(getValues('mnemonic'));
-
     if (!isPrivateKey(mnemonic)) {
       await registerConfig.createMnemonic(
         getValues('name'),
@@ -416,7 +415,7 @@ export const RecoverMnemonicScreen: FunctionComponent = observer((props) => {
         </React.Fragment>
       ) : null}
       {/* <View style={{ alignItems: 'flex-start' }}> */}
-        <BIP44AdvancedButton bip44Option={bip44Option} />
+      <BIP44AdvancedButton bip44Option={bip44Option} />
       {/* </View> */}
       <TouchableOpacity
         disabled={isCreating}
