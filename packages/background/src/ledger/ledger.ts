@@ -1,46 +1,128 @@
-const channelDevice = new BroadcastChannel('device');
+import { TransportIniter } from './options';
 
-const callProxy = (method: string, args: any[] = []): Promise<any> =>
-  new Promise((resolve) => {
-    let requestId = Date.now();
-    const handler = ({ data }) => {
-      // match requestId
-      if (data.requestId !== requestId) return;
-      resolve(data.response);
-      channelDevice.removeEventListener('message', handler);
-    };
-    channelDevice.addEventListener('message', handler);
-    channelDevice.postMessage({ method, args, requestId });
-  });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CosmosApp: any = require('ledger-cosmos-js').default;
+import TransportWebHID from '@ledgerhq/hw-transport-webhid';
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import { signatureImport } from 'secp256k1';
+
+export enum LedgerInitErrorOn {
+  Transport,
+  App,
+  Unknown
+}
+
+export const LedgerWebUSBIniter: TransportIniter = async () => {
+  return await TransportWebUSB.create();
+};
+
+export const LedgerWebHIDIniter: TransportIniter = async () => {
+  return await TransportWebHID.create();
+};
+
+export class LedgerInitError extends Error {
+  constructor(public readonly errorOn: LedgerInitErrorOn, message?: string) {
+    super(message);
+
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, LedgerInitError.prototype);
+  }
+}
 
 export class Ledger {
-  static async init(mode: string, initArgs: any[] = []): Promise<Ledger> {
-    await callProxy('init', [mode, initArgs]);
-    return new Ledger();
+  constructor(private readonly cosmosApp: any) {}
+
+  static async init(
+    transportIniter: TransportIniter,
+    initArgs: any[] = []
+  ): Promise<Ledger> {
+    const transport = await transportIniter(...initArgs);
+    try {
+      const cosmosApp = new CosmosApp(transport);
+      const ledger = new Ledger(cosmosApp);
+      const versionResponse = await ledger.getVersion();
+
+      // In this case, device is on screen saver.
+      // However, it is almost same as that the device is not unlocked to user-side.
+      // So, handle this case as initializing failed in `Transport`.
+      if (versionResponse.deviceLocked) {
+        throw new Error('Device is on screen saver');
+      }
+
+      return ledger;
+    } catch (e) {
+      if (transport) {
+        await transport.close();
+      }
+      if (e.message === 'Device is on screen saver') {
+        throw new LedgerInitError(LedgerInitErrorOn.Transport, e.message);
+      }
+
+      throw new LedgerInitError(LedgerInitErrorOn.App, e.message);
+    }
   }
 
-  getVersion(): Promise<{
+  async getVersion(): Promise<{
     deviceLocked: boolean;
     major: number;
-    version: string;
+    minor: number;
+    patch: number;
+    targetId: string;
     testMode: boolean;
   }> {
-    return callProxy('getVersion');
+    if (!this.cosmosApp) {
+      throw new Error('Comsos App not initialized');
+    }
+
+    const result = await this.cosmosApp.getVersion();
+    if (result.error_message !== 'No errors') {
+      throw new Error(result.error_message);
+    }
+
+    return {
+      deviceLocked: result.device_locked,
+      major: result.major,
+      minor: result.minor,
+      patch: result.patch,
+      targetId: result.target_id,
+      testMode: result.test_mode
+    };
   }
 
-  getPublicKey(path: number[] | string): Promise<Uint8Array> {
-    return callProxy('getPublicKey', [path]);
+  async getPublicKey(path: number[]): Promise<Uint8Array> {
+    if (!this.cosmosApp) {
+      throw new Error('Comsos App not initialized');
+    }
+
+    const result = await this.cosmosApp.publicKey(path);
+    if (result.error_message !== 'No errors') {
+      throw new Error(result.error_message);
+    }
+
+    return result.compressed_pk;
   }
 
-  sign(path: number[] | string, message: Uint8Array): Promise<Uint8Array> {
-    return callProxy('sign', [path, message]);
+  async sign(path: number[], message: Uint8Array): Promise<Uint8Array> {
+    if (!this.cosmosApp) {
+      throw new Error('Comsos App not initialized');
+    }
+
+    const result = await this.cosmosApp.sign(path, message);
+    console.log('result sign ledger', result);
+
+    if (result.error_message !== 'No errors') {
+      throw new Error(result.error_message);
+    }
+
+    // Parse a DER ECDSA signature
+    return signatureImport(result.signature);
   }
 
-  close(): Promise<void> {
-    return callProxy('close');
+  async close(): Promise<void> {
+    return await this.cosmosApp.transport.close();
   }
 
-  static isWebHIDSupported(): Promise<boolean> {
-    return callProxy('isWebHIDSupported');
+  static async isWebHIDSupported(): Promise<boolean> {
+    return await TransportWebHID.isSupported();
   }
 }

@@ -1,7 +1,7 @@
 import { delay as diDelay, inject, singleton } from 'tsyringe';
 import { TYPES } from '../types';
 
-import { Ledger } from './ledger';
+import { Ledger, LedgerWebHIDIniter, LedgerWebUSBIniter } from './ledger';
 
 import delay from 'delay';
 
@@ -27,8 +27,16 @@ export class LedgerService {
     options: Partial<LedgerOptions>
   ) {
     this.options = {
-      defaultMode: options.defaultMode || 'webusb'
+      defaultMode: options.defaultMode || 'webusb',
+      transportIniters: options.transportIniters ?? {}
     };
+
+    if (!this.options.transportIniters['webusb']) {
+      this.options.transportIniters['webusb'] = LedgerWebUSBIniter;
+    }
+    if (!this.options.transportIniters['webhid']) {
+      this.options.transportIniters['webhid'] = LedgerWebHIDIniter;
+    }
   }
 
   async getPublicKey(env: Env, bip44HDPath: BIP44HDPath): Promise<Uint8Array> {
@@ -97,6 +105,8 @@ export class LedgerService {
         }
         return signature;
       } catch (e) {
+        console.log('e ledger', e.message);
+
         // Notify UI Ledger signing failed only when Ledger initialization is tried again.
         if (retryCount > 0) {
           this.interactionService.dispatchEvent(APP_PORT, 'ledger-init', {
@@ -159,7 +169,12 @@ export class LedgerService {
     while (true) {
       const mode = await this.getMode();
       try {
-        const ledger = await Ledger.init(mode, initArgs);
+        const transportIniter = this.options.transportIniters[mode];
+        if (!transportIniter) {
+          throw new Error(`Unknown mode: ${mode}`);
+        }
+
+        const ledger = await Ledger.init(transportIniter, initArgs);
         this.previousInitAborter = undefined;
         return {
           ledger,
@@ -230,7 +245,7 @@ export class LedgerService {
           promises.push(aborter.wait());
 
           // Check that the Ledger Popup is opened only if the environment is extension.
-          if (typeof browser !== 'undefined' && browser.extension.getViews) {
+          if (typeof browser !== 'undefined') {
             promises.push(this.testLedgerGrantUIOpened());
           }
 
