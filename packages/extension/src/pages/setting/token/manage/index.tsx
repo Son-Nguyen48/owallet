@@ -33,16 +33,7 @@ export const ManageTokenPage: FunctionComponent = observer(() => {
   });
 
   return (
-    <HeaderLayout
-      showChainName={false}
-      canChangeChainInfo={false}
-      alternativeTitle={intl.formatMessage({
-        id: 'main.menu.token-list'
-      })}
-      onBackButton={() => {
-        history.goBack();
-      }}
-    >
+    <>
       <div className={style.container}>
         {appCurrencies.map((currency) => {
           const cosmwasmToken = currency as CW20Currency | Secret20Currency;
@@ -157,6 +148,6 @@ export const ManageTokenPage: FunctionComponent = observer(() => {
           );
         })}
       </div>
-    </HeaderLayout>
+    </>
   );
 });

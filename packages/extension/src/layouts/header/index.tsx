@@ -25,20 +25,55 @@ export interface Props {
 
 export interface LocalProps {
   isMenuOpen: boolean;
+  toggle: (i) => void;
+  listTabs: Array<string>;
 }
 
 export const Header: FunctionComponent<Props & LocalProps> = observer(
-  ({
-    showChainName,
-    canChangeChainInfo,
-    alternativeTitle,
-    menuRenderer,
-    rightRenderer,
-    isMenuOpen,
-    onBackButton
-  }) => {
+  ({ toggle, listTabs }) => {
+    const checkRouter = {
+      Account: 'setting/set-keyring',
+      Home: '',
+      Token: 'token',
+      Menu: 'menu'
+    };
+    const hrefReplace = window.location.href.replace(
+      'chrome-extension://cldpgmdapgjebdphikkmaagjllpgoffa/popup.html#/',
+      ''
+    );
+
+    return (
+      <CompHeader>
+        <div className={style.menuContainer}>
+          <div className={style.tabs}>
+            {listTabs.map((e, i) => {
+              return (
+                <div
+                  onClick={() => toggle(i.toString())}
+                  className={style.menuTab}
+                  style={{
+                    color:
+                      hrefReplace === checkRouter[e] ? '#FCFCFD' : '#777E90',
+                    backgroundColor:
+                      hrefReplace === checkRouter[e] ? '#7664E4' : 'none'
+                  }}
+                >
+                  <div style={{ textAlign: 'center', padding: '6px 10px' }}>
+                    {e}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </CompHeader>
+    );
+  }
+);
+
+export const SelectChain: FunctionComponent<Props> = observer(
+  ({ showChainName, canChangeChainInfo, alternativeTitle }) => {
     const { chainStore } = useStore();
-    const menu = useMenu();
 
     const chainInfoChangable =
       canChangeChainInfo &&
@@ -46,51 +81,11 @@ export const Header: FunctionComponent<Props & LocalProps> = observer(
       alternativeTitle == null;
 
     return (
-      <CompHeader
-        left={
-          <div className={style.menuContainer}>
-            {menuRenderer ? (
-              <>
-                <Menu isOpen={isMenuOpen}>{menuRenderer}</Menu>
-                <motion.div
-                  className={style['menu-img']}
-                  style={{ zIndex: 901 }}
-                  animate={isMenuOpen ? 'open' : 'closed'}
-                  onClick={menu.toggle}
-                >
-                  <MenuButton />
-                </motion.div>
-              </>
-            ) : null}
-            {onBackButton ? (
-              <div
-                className={style['menu-img']}
-                onClick={() => {
-                  if (onBackButton) {
-                    onBackButton();
-                  }
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path
-                    fill="transparent"
-                    strokeWidth="2"
-                    stroke="white"
-                    strokeLinecap="round"
-                    d="M 6.5 10 L 13.5 3.5 M 6.5 10 L 13.5 16.5"
-                  />
-                </svg>
-              </div>
-            ) : null}
-          </div>
-        }
-        right={rightRenderer}
-      >
+      <div>
         {showChainName || alternativeTitle ? (
           <ToolTip
             trigger={chainInfoChangable ? 'click' : 'static'}
             tooltip={<ChainList />}
-            theme="primary"
           >
             <div
               className={style.chainListContainer}
@@ -116,7 +111,7 @@ export const Header: FunctionComponent<Props & LocalProps> = observer(
             </div>
           </ToolTip>
         ) : null}
-      </CompHeader>
+      </div>
     );
   }
 );

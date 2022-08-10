@@ -102,20 +102,7 @@ export const AddTokenPage: FunctionComponent = observer(() => {
   };
 
   return (
-    <HeaderLayout
-      showChainName={false}
-      canChangeChainInfo={false}
-      alternativeTitle={intl.formatMessage({
-        id: 'setting.token.add'
-      })}
-      onBackButton={
-        interactionInfo.interaction
-          ? undefined
-          : () => {
-              history.goBack();
-            }
-      }
-    >
+    <>
       <Form
         className={style.container}
         onSubmit={form.handleSubmit(async (data) => {
@@ -333,6 +320,6 @@ export const AddTokenPage: FunctionComponent = observer(() => {
           <FormattedMessage id="setting.token.add.button.submit" />
         </Button>
       </Form>
-    </HeaderLayout>
+    </>
   );
 });

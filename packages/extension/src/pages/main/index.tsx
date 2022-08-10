@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useRef } from 'react';
 
-import { HeaderLayout } from '../../layouts';
+import { HeaderLayout, LayoutHidePage } from '../../layouts';
 
 import { Card, CardBody } from 'reactstrap';
 
@@ -9,7 +9,7 @@ import { Menu } from './menu';
 import { AccountView } from './account';
 import { TxButtonEvmView, TxButtonView } from './tx-button';
 import { AssetView, AssetViewEvm } from './asset';
-import { StakeView } from './stake';
+import { LinkStakeView, StakeView } from './stake';
 
 import classnames from 'classnames';
 import { useHistory } from 'react-router';
@@ -22,13 +22,15 @@ import { useConfirm } from '../../components/confirm';
 import { ChainUpdaterService } from '@owallet/background';
 import { IBCTransferView } from './ibc-transfer';
 import { AmountTokenCosmos, AmountTokenEvm } from './amount-tokens';
+import { SendPage } from '../send';
+import { SelectChain } from '../../layouts/header';
 
 export const MainPage: FunctionComponent = observer(() => {
   const history = useHistory();
   const intl = useIntl();
 
   const { chainStore, accountStore, queriesStore, uiConfigStore } = useStore();
-
+  const [hasSend, setHasSend] = React.useState(false);
   const confirm = useConfirm();
 
   const currentChainId = chainStore.current.chainId;
@@ -78,40 +80,37 @@ export const MainPage: FunctionComponent = observer(() => {
   const tokens = queryBalances.unstakables;
 
   const hasTokens = tokens.length > 0;
-
-  console.log(queryBalances, 'QUERY BALANCES!!!!!!!!!!!!!!!!!!!!!!!');
-  console.log(tokens, ' TOKEN!!!!!!!!!!!!!!!!!!!');
-
   return (
     <HeaderLayout
       showChainName
       canChangeChainInfo
-      menuRenderer={<Menu />}
-      rightRenderer={
-        <div
-          style={{
-            height: '64px',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingRight: '20px'
-          }}
-        >
-          <i
-            className="fas fa-user"
-            style={{
-              cursor: 'pointer',
-              padding: '4px'
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-
-              history.push('/setting/set-keyring');
-            }}
-          />
-        </div>
-      }
+      // menuRenderer={<Menu />}
+      // rightRenderer={
+      //   <div
+      //     style={{
+      //       height: '64px',
+      //       display: 'flex',
+      //       flexDirection: 'row',
+      //       alignItems: 'center',
+      //       paddingRight: '20px'
+      //     }}
+      //   >
+      //     <i
+      //       className="fas fa-user"
+      //       style={{
+      //         cursor: 'pointer',
+      //         padding: '4px'
+      //       }}
+      //       onClick={(e) => {
+      //         e.preventDefault();
+      //         history.push('/setting/set-keyring');
+      //       }}
+      //     />
+      //   </div>
+      // }
     >
+      <SelectChain showChainName canChangeChainInfo />
+      <div style={{ height: 10 }} />
       <BIP44SelectModal />
       <Card className={classnames(style.card, 'shadow')}>
         <CardBody>
@@ -139,24 +138,46 @@ export const MainPage: FunctionComponent = observer(() => {
             )}
             {chainStore.current.networkType === 'evm' ? (
               <div style={{ marginTop: 24 }}>
-                <TxButtonEvmView />
+                <TxButtonEvmView hasSend={hasSend} setHasSend={setHasSend} />
               </div>
             ) : (
               <>
-                <TxButtonView />
+                <TxButtonView hasSend={hasSend} setHasSend={setHasSend} />
               </>
             )}
+            {hasSend ? (
+              <>
+                <div style={{ height: 32 }} />
+                <hr
+                  className="my-3"
+                  style={{
+                    height: 1,
+                    borderTop: '1px solid #E6E8EC'
+                  }}
+                />
+                <LayoutHidePage hidePage={() => setHasSend(false)} />
+                <SendPage />
+              </>
+            ) : null}
           </div>
         </CardBody>
       </Card>
-      {/* {chainStore.current.networkType === 'cosmos' && (
-        <Card className={classnames(style.card, 'shadow')}>
-          <CardBody>
-            <StakeView />
-          </CardBody>
-        </Card>
-      )} */}
-      {hasTokens ? (
+
+      {chainStore.current.networkType === 'cosmos' && (
+        <>
+          <Card className={classnames(style.card, 'shadow')}>
+            <CardBody>
+              <StakeView />
+            </CardBody>
+          </Card>
+          <Card className={classnames(style.card, 'shadow')}>
+            <CardBody>
+              <LinkStakeView />
+            </CardBody>
+          </Card>
+        </>
+      )}
+      {/* {hasTokens ? (
         <Card className={classnames(style.card, 'shadow')}>
           <CardBody>
             {
@@ -167,15 +188,16 @@ export const MainPage: FunctionComponent = observer(() => {
             }
           </CardBody>
         </Card>
-      ) : null}
-      {uiConfigStore.showAdvancedIBCTransfer &&
+      ) : null} */}
+
+      {/* {uiConfigStore.showAdvancedIBCTransfer &&
       chainStore.current.features?.includes('ibc-transfer') ? (
         <Card className={classnames(style.card, 'shadow')}>
           <CardBody>
             <IBCTransferView />
           </CardBody>
         </Card>
-      ) : null}
+      ) : null} */}
     </HeaderLayout>
   );
 });

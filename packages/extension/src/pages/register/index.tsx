@@ -84,14 +84,14 @@ export const RegisterPage: FunctionComponent = observer(() => {
         <div>
           <img
             className={style.icon}
-            src={require('../../public/assets/svg/oraichain-pro-logo.svg')}
+            src={require('../../public/assets/orai_wallet_logo.png')}
             alt="logo"
           />
         </div>
         <div className={style.logoInnerContainer}>
           <img
             className={style.logo}
-            src={require('../../public/assets/img/oraichain-pro.svg')}
+            src={require('../../public/assets/logo.svg')}
             alt="logo"
           />
           <div className={style.paragraph}>Cosmos x EVM in one Wallet</div>

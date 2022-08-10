@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import styleCoinInput from './coin-input.module.scss';
 
 import {
+  Button,
   ButtonDropdown,
   DropdownItem,
   DropdownMenu,
@@ -11,6 +12,7 @@ import {
   FormFeedback,
   FormGroup,
   Input,
+  InputGroup,
   Label
 } from 'reactstrap';
 import { observer } from 'mobx-react-lite';
@@ -202,7 +204,7 @@ export const CoinInput: FunctionComponent<CoinInputProps> = observer(
                     amountConfig.toggleIsMax();
                   }}
                 >
-                  <span>{`Balance: ${balance
+                  <span>{`Total: ${balance
                     .trim(true)
                     .maxDecimals(6)
                     .toString()}`}</span>
@@ -210,31 +212,55 @@ export const CoinInput: FunctionComponent<CoinInputProps> = observer(
               ) : null}
             </Label>
           ) : null}
-          <Input
-            className={classnames(
-              'form-control-alternative',
-              styleCoinInput.input
-            )}
-            id={`input-${randomId}`}
-            type="number"
-            value={amountConfig.amount}
-            onChange={(e) => {
-              e.preventDefault();
-
-              amountConfig.setAmount(e.target.value);
+          <InputGroup
+            style={{
+              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
             }}
-            step={new Dec(1)
-              .quo(
-                DecUtils.getTenExponentNInPrecisionRange(
-                  amountConfig.sendCurrency?.coinDecimals ?? 0
+          >
+            <Input
+              className={classnames(
+                'form-control-alternative',
+                styleCoinInput.input
+              )}
+              id={`input-${randomId}`}
+              type="number"
+              value={amountConfig.amount}
+              onChange={(e) => {
+                e.preventDefault();
+
+                amountConfig.setAmount(e.target.value);
+              }}
+              step={new Dec(1)
+                .quo(
+                  DecUtils.getTenExponentNInPrecisionRange(
+                    amountConfig.sendCurrency?.coinDecimals ?? 0
+                  )
                 )
-              )
-              .toString(amountConfig.sendCurrency?.coinDecimals ?? 0)}
-            min={0}
-            disabled={amountConfig.isMax}
-            autoComplete="off"
-            placeholder={placeholder}
-          />
+                .toString(amountConfig.sendCurrency?.coinDecimals ?? 0)}
+              min={0}
+              disabled={amountConfig.isMax}
+              autoComplete="off"
+              placeholder={placeholder}
+            />
+            <div
+              style={{ padding: 7.5, textAlign: 'center', cursor: 'pointer' }}
+              onClick={(e) => {
+                e.preventDefault();
+                amountConfig.toggleIsMax();
+              }}
+            >
+              <div
+                style={{
+                  width: 50,
+                  height: 28,
+                  backgroundColor: '#7664E4',
+                  borderRadius: 4
+                }}
+              >
+                <span style={{ color: 'white', fontSize: 14 }}>MAX</span>
+              </div>
+            </div>
+          </InputGroup>
           {errorText != null ? (
             <FormFeedback style={{ display: 'block', position: 'sticky' }}>
               {errorText}

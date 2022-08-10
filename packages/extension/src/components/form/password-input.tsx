@@ -1,30 +1,31 @@
-import React, { forwardRef, useRef, useState } from "react";
-import { Input, InputProps } from "./input";
-import stylePasswordInput from "./password-input.module.scss";
-import { Tooltip } from "reactstrap";
-import { FormattedMessage } from "react-intl";
+import React, { forwardRef, useRef, useState } from 'react';
+import { Input, InputProps } from './input';
+import stylePasswordInput from './password-input.module.scss';
+import { Tooltip } from 'reactstrap';
+import { FormattedMessage } from 'react-intl';
 
 // eslint-disable-next-line react/display-name
 export const PasswordInput = forwardRef<
   HTMLInputElement,
   Omit<
     InputProps & React.InputHTMLAttributes<HTMLInputElement>,
-    "type" | "onKeyUp" | "onKeyDown"
+    'type' | 'onKeyUp' | 'onKeyDown'
   >
 >((props, ref) => {
   const otherRef = useRef<HTMLInputElement | null>(null);
-
+  const { typeInput } = props;
+  const type = typeInput || 'password';
   const [isOnCapsLock, setIsOnCapsLock] = useState(false);
 
   return (
     <React.Fragment>
       <Input
         {...props}
-        type="password"
+        type={type}
         ref={(argRef) => {
           otherRef.current = argRef;
           if (ref) {
-            if ("current" in ref) {
+            if ('current' in ref) {
               ref.current = argRef;
             } else {
               ref(argRef);
@@ -32,14 +33,14 @@ export const PasswordInput = forwardRef<
           }
         }}
         onKeyUp={(e) => {
-          if (e.getModifierState("CapsLock")) {
+          if (e.getModifierState('CapsLock')) {
             setIsOnCapsLock(true);
           } else {
             setIsOnCapsLock(false);
           }
         }}
         onKeyDown={(e) => {
-          if (e.getModifierState("CapsLock")) {
+          if (e.getModifierState('CapsLock')) {
             setIsOnCapsLock(true);
           } else {
             setIsOnCapsLock(false);
