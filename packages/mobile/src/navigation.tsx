@@ -122,7 +122,7 @@ import { useRoute } from '@react-navigation/core';
 import { TransferNFTScreen } from './screens/transfer-nft';
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+// const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeScreenHeaderLeft: FunctionComponent = observer(() => {
@@ -187,7 +187,7 @@ const HomeScreenHeaderTitle: FunctionComponent = observer(() => {
   const { chainStore, modalStore } = useStore();
 
   const smartNavigation = useSmartNavigation();
-  const deterministicNumber = useCallback((chainInfo) => {
+  const deterministicNumber = useCallback(chainInfo => {
     const bytes = Hash.sha256(
       Buffer.from(chainInfo.stakeCurrency.coinMinimalDenom)
     );
@@ -197,7 +197,7 @@ const HomeScreenHeaderTitle: FunctionComponent = observer(() => {
   }, []);
 
   const profileColor = useCallback(
-    (chainInfo) => {
+    chainInfo => {
       const random = [colors['purple-400']];
 
       return random[deterministicNumber(chainInfo) % random.length];
@@ -956,7 +956,7 @@ export const MainTabNavigation: FunctionComponent = () => {
               return <RenderTabsBarIcon color={color} name={'Settings'} />;
           }
         },
-        tabBarButton: (props) => (
+        tabBarButton: props => (
           <View
             style={{
               display: 'flex',
@@ -993,7 +993,7 @@ export const MainTabNavigation: FunctionComponent = () => {
         },
         showLabel: false
       }}
-      tabBar={(props) => (
+      tabBar={props => (
         <BlurredBottomTabBar {...props} enabledScreens={['Home']} />
       )}
     >
@@ -1048,7 +1048,7 @@ export const AppNavigation: FunctionComponent = observer(() => {
   const { keyRingStore, deepLinkUriStore } = useStore();
   useEffect(() => {
     Linking.getInitialURL()
-      .then((url) => {
+      .then(url => {
         if (url) {
           const SCHEME_IOS = 'owallet://open_url?url=';
           const SCHEME_ANDROID = 'app.owallet.oauth://google/open_url?url=';
@@ -1057,7 +1057,7 @@ export const AppNavigation: FunctionComponent = observer(() => {
           );
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.warn('Deeplinking error', err);
       });
     Linking.addEventListener('url', handleDeepLink);

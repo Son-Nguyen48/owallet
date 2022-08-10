@@ -39,8 +39,8 @@ export const SelectNetworkScreen = () => {
       {
         rpc: 'https://testnet-rpc.orai.io',
         rest: 'https://testnet-lcd.orai.io',
-        chainId: 'Oraichain-testnet',
-        chainName: 'Oraichain-testnet',
+        chainId: 'Oraichain-testnet-plus',
+        chainName: 'Oraichain-testnet plus',
         stakeCurrency: {
           coinDenom: 'ORAI',
           coinMinimalDenom: 'orai',
