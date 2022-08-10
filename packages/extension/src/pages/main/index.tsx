@@ -9,7 +9,7 @@ import { Menu } from './menu';
 import { AccountView } from './account';
 import { TxButtonEvmView, TxButtonView } from './tx-button';
 import { AssetView, AssetViewEvm } from './asset';
-import { StakeView, LinkStakeView } from './stake';
+import { StakeView } from './stake';
 
 import classnames from 'classnames';
 import { useHistory } from 'react-router';
@@ -21,7 +21,6 @@ import { useIntl } from 'react-intl';
 import { useConfirm } from '../../components/confirm';
 import { ChainUpdaterService } from '@owallet/background';
 import { IBCTransferView } from './ibc-transfer';
-import { SelectChain } from '../../layouts/header';
 import { AmountTokenCosmos, AmountTokenEvm } from './amount-tokens';
 
 export const MainPage: FunctionComponent = observer(() => {
@@ -70,11 +69,18 @@ export const MainPage: FunctionComponent = observer(() => {
 
   const queryBalances = queriesStore
     .get(chainStore.current.chainId)
-    .queryBalances.getQueryBech32Address(accountInfo.bech32Address);
+    .queryBalances.getQueryBech32Address(
+      chainStore.current.networkType === 'evm'
+        ? accountInfo.evmosHexAddress
+        : accountInfo.bech32Address
+    );
 
   const tokens = queryBalances.unstakables;
 
   const hasTokens = tokens.length > 0;
+
+  console.log(queryBalances, 'QUERY BALANCES!!!!!!!!!!!!!!!!!!!!!!!');
+  console.log(tokens, ' TOKEN!!!!!!!!!!!!!!!!!!!');
 
   return (
     <HeaderLayout
@@ -99,14 +105,13 @@ export const MainPage: FunctionComponent = observer(() => {
             }}
             onClick={(e) => {
               e.preventDefault();
+
               history.push('/setting/set-keyring');
             }}
           />
         </div>
       }
     >
-      <SelectChain showChainName canChangeChainInfo />
-      <div style={{ height: 10 }}/>
       <BIP44SelectModal />
       <Card className={classnames(style.card, 'shadow')}>
         <CardBody>
@@ -124,6 +129,15 @@ export const MainPage: FunctionComponent = observer(() => {
               )}
             </div>
             {chainStore.current.networkType === 'evm' ? (
+              <>
+                <AmountTokenEvm />
+              </>
+            ) : (
+              <>
+                <AmountTokenCosmos />
+              </>
+            )}
+            {chainStore.current.networkType === 'evm' ? (
               <div style={{ marginTop: 24 }}>
                 <TxButtonEvmView />
               </div>
@@ -135,23 +149,23 @@ export const MainPage: FunctionComponent = observer(() => {
           </div>
         </CardBody>
       </Card>
-      {chainStore.current.networkType === 'cosmos' && (
-        <>
-          <Card className={classnames(style.card, 'shadow')}>
-            <CardBody>
-              <StakeView />
-            </CardBody>
-          </Card>
-          <Card className={classnames(style.card, 'shadow')}>
-            <CardBody>
-              <LinkStakeView />
-            </CardBody>
-          </Card>
-        </>
-      )}
+      {/* {chainStore.current.networkType === 'cosmos' && (
+        <Card className={classnames(style.card, 'shadow')}>
+          <CardBody>
+            <StakeView />
+          </CardBody>
+        </Card>
+      )} */}
       {hasTokens ? (
         <Card className={classnames(style.card, 'shadow')}>
-          <CardBody>{<TokensView tokens={tokens} />}</CardBody>
+          <CardBody>
+            {
+              <TokensView
+                networkType={chainStore.current.networkType}
+                tokens={tokens}
+              />
+            }
+          </CardBody>
         </Card>
       ) : null}
       {uiConfigStore.showAdvancedIBCTransfer &&

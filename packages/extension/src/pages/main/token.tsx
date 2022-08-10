@@ -15,6 +15,7 @@ import { DenomHelper } from '@owallet/common';
 
 import { useLanguage } from '@owallet/common';
 import { Bech32Address } from '@owallet/cosmos';
+import { NetworkType } from '@owallet/types';
 
 const TokenView: FunctionComponent<{
   balance: ObservableQueryBalanceInner;
@@ -219,7 +220,8 @@ const TokenView: FunctionComponent<{
 
 export const TokensView: FunctionComponent<{
   tokens: ObservableQueryBalanceInner[];
-}> = observer(({ tokens }) => {
+  networkType: NetworkType;
+}> = observer(({ tokens, networkType }) => {
   // const { chainStore, accountStore, queriesStore } = useStore();
 
   // const accountInfo = accountStore.getAccount(chainStore.current.chainId);
@@ -252,7 +254,7 @@ export const TokensView: FunctionComponent<{
             balance={token}
             onClick={() => {
               history.push({
-                pathname: '/send',
+                pathname: networkType === 'evm' ? '/send-evm' : '/send',
                 search: `?defaultDenom=${token.currency.coinMinimalDenom}`
               });
             }}
