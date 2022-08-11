@@ -72,9 +72,7 @@ const ChainElement: FunctionComponent<{
 export const ChainList: FunctionComponent = observer(() => {
   const { chainStore } = useStore();
 
-  const mainChainList = chainStore.chainInfos.filter(
-    (chainInfo) => !chainInfo.beta
-  );
+  const mainChainList = chainStore.chainInfos;
   const betaChainList = chainStore.chainInfos.filter(
     (chainInfo) => chainInfo.beta
   );

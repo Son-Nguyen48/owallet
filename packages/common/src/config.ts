@@ -99,6 +99,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd.orai.io',
     chainId: 'Oraichain',
     chainName: 'Oraichain',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'ORAI',
       coinMinimalDenom: 'orai',
@@ -169,6 +170,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://testnet-lcd.orai.io',
     chainId: 'Oraichain-testnet',
     chainName: 'Oraichain-testnet',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'ORAI',
       coinMinimalDenom: 'orai',
@@ -206,6 +208,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     chainName: 'OraiBridge',
     rpc: 'https://bridge.rpc.orai.io',
     rest: 'https://bridge.lcd.orai.io',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'ORAIB',
       coinMinimalDenom: 'uoraib',
@@ -290,6 +293,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     evmRpc: 'https://endpoint1.kawaii.global',
     rest: 'https://cosmos1.kawaii.global',
     chainId: 'kawaii_6886-1',
+    networkType: "cosmos",
     chainName: 'Kawaiiverse Cosmos',
     stakeCurrency: {
       coinDenom: 'ORAIE',
@@ -396,6 +400,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     chainId: 'balcony_666666-1',
     coinType: 60,
     chainName: 'Balcony Subnet Cosmos',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'ORAIN',
       coinMinimalDenom: 'orain',
@@ -426,6 +431,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-cosmoshub.keplr.app',
     chainId: 'cosmoshub-4',
     chainName: 'Cosmos Hub',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'ATOM',
       coinMinimalDenom: 'uatom',
@@ -474,6 +480,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-osmosis.keplr.app',
     chainId: 'osmosis-1',
     chainName: 'Osmosis',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'OSMO',
       coinMinimalDenom: 'uosmo',
@@ -529,6 +536,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-juno.keplr.app',
     chainId: 'juno-1',
     chainName: 'Juno',
+    networkType: "cosmos",
     stakeCurrency: {
       coinDenom: 'JUNO',
       coinMinimalDenom: 'ujuno',
