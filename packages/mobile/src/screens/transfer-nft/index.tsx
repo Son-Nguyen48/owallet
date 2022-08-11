@@ -260,7 +260,8 @@ export const TransferNFTScreen: FunctionComponent = observer(() => {
                     sendConfigs.feeConfig.toStdFee(),
                     {
                       preferNoSetFee: true,
-                      preferNoSetMemo: true
+                      preferNoSetMemo: true,
+                      networkType: chainStore.current.networkType
                     },
                     {
                       onBroadcasted: txHash => {
