@@ -7,7 +7,10 @@ import React, {
 
 import { Button } from 'reactstrap';
 
-import { Ledger, LedgerInitErrorOn } from '../../ledger';
+import {
+  LedgerInternal as Ledger,
+  LedgerInitErrorOn
+} from '@owallet/background';
 
 import style from './style.module.scss';
 import { EmptyLayout } from '../../layouts/empty-layout';
@@ -95,8 +98,6 @@ export const LedgerGrantPage: FunctionComponent = observer(() => {
         initErrorOn = LedgerInitErrorOn.Unknown;
       }
     }
-
-    console.log("REACH HERE ON TRY INIT")
 
     setInitErrorOn(initErrorOn);
     setTryInitializing(false);
