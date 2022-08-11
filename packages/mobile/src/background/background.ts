@@ -26,7 +26,7 @@ init(
   new RNMessageRequesterInternalToUI(),
   EmbedChainInfos,
   // allow all dApps
-  DAppInfos.map((dApp) => dApp.uri),
+  DAppInfos.map(dApp => dApp.uri),
   // @ts-ignore
   webcrypto.getRandomValues,
   {
