@@ -77,7 +77,7 @@ const useAutoBiomtric = (keychainStore: KeychainStore, tryEnabled: boolean) => {
       tryBiometricAutoOnce.current = true;
       (async () => {
         try {
-          await delay(20);
+          await delay(2000);
           await keychainStore.tryUnlockWithBiometry();
           setStatus(AutoBiomtricStatus.SUCCESS);
         } catch (e) {
@@ -125,6 +125,9 @@ export const UnlockScreen: FunctionComponent = observer(() => {
   }, [autoBiometryStatus, navigation]);
 
   useEffect(() => {
+    if (__DEV__) {
+      return;
+    }
     CodePush.sync(
       {
         // updateDialog: {
