@@ -11,7 +11,8 @@ const tsRule = {
   test: /\.ts$/,
   loader: 'ts-loader',
   options: {
-    configFile: 'tsconfig.provider.json'
+    configFile: 'tsconfig.provider.json',
+    allowTsInNodeModules: true
   }
 };
 
