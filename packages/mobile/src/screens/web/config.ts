@@ -1,8 +1,10 @@
 import { ImageSourcePropType } from 'react-native';
 
+export const InjectedProviderUrl =
+  'http://son.local:8081' || 'https://static.orai.io';
 // export const InjectedProviderUrl =
-//   process.env.INJECTED_PROVIDER_URL || 'https://owallet-provider.oraidex.io';
-export const InjectedProviderUrl = 'https://do2.scan.orai.io';
+//   process.env.INJECTED_PROVIDER_URL || 'https://static.orai.io';
+// export const InjectedProviderUrl = 'https://static.orai.io';
 
 export type DAppInfo = {
   id: number;

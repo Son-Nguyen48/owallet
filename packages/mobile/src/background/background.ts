@@ -1,4 +1,4 @@
-import { init, LedgerInternal, ScryptParams } from '@owallet/background';
+// import { init, LedgerInternal, ScryptParams } from '@owallet/background';
 import {
   RNEnv,
   RNMessageRequesterInternalToUI,
@@ -15,6 +15,7 @@ import {
   setLastUsedLedgerDeviceId
 } from '../utils/ledger';
 import { DAppInfos } from '../screens/web/config';
+import { LedgerInternal, ScryptParams, init } from '@owallet/background';
 
 // done polyfill
 const { webcrypto } = require('crypto');

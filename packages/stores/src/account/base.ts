@@ -65,9 +65,9 @@ export interface MsgOpt {
 type AminoMsgsOrWithProtoMsgs =
   | Msg[]
   | {
-    aminoMsgs: Msg[];
-    protoMsgs?: google.protobuf.IAny[];
-  };
+      aminoMsgs: Msg[];
+      protoMsgs?: google.protobuf.IAny[];
+    };
 
 export interface AccountSetOpts<MsgOpts> {
   readonly prefetching: boolean;
@@ -123,10 +123,10 @@ export class AccountSetBase<MsgOpts, Queries> {
     onTxEvents?:
       | ((tx: any) => void)
       | {
-        onBroadcastFailed?: (e?: Error) => void;
-        onBroadcasted?: (txHash: Uint8Array) => void;
-        onFulfill?: (tx: any) => void;
-      }
+          onBroadcastFailed?: (e?: Error) => void;
+          onBroadcasted?: (txHash: Uint8Array) => void;
+          onFulfill?: (tx: any) => void;
+        }
   ) => Promise<boolean>)[] = [];
 
   constructor(
@@ -144,7 +144,7 @@ export class AccountSetBase<MsgOpts, Queries> {
     this.pubKey = new Uint8Array();
 
     if (opts.autoInit) {
-      this.init()
+      this.init();
     }
   }
 
@@ -171,9 +171,9 @@ export class AccountSetBase<MsgOpts, Queries> {
       onTxEvents?:
         | ((tx: any) => void)
         | {
-          onBroadcasted?: (txHash: Uint8Array) => void;
-          onFulfill?: (tx: any) => void;
-        }
+            onBroadcasted?: (txHash: Uint8Array) => void;
+            onFulfill?: (tx: any) => void;
+          }
     ) => Promise<boolean>
   ) {
     this.sendTokenFns.push(fn);
@@ -290,10 +290,10 @@ export class AccountSetBase<MsgOpts, Queries> {
     onTxEvents?:
       | ((tx: any) => void)
       | {
-        onBroadcastFailed?: (e?: Error) => void;
-        onBroadcasted?: (txHash: Uint8Array) => void;
-        onFulfill?: (tx: any) => void;
-      }
+          onBroadcastFailed?: (e?: Error) => void;
+          onBroadcasted?: (txHash: Uint8Array) => void;
+          onFulfill?: (tx: any) => void;
+        }
   ) {
     runInAction(() => {
       this._isSendingMsg = type;
@@ -360,7 +360,7 @@ export class AccountSetBase<MsgOpts, Queries> {
         wsObject: this.opts.wsObject
       }
     );
-    txTracer.traceTx(txHash).then((tx) => {
+    txTracer.traceTx(txHash).then(tx => {
       txTracer.close();
 
       runInAction(() => {
@@ -372,7 +372,7 @@ export class AccountSetBase<MsgOpts, Queries> {
         const bal = this.queries.queryBalances
           .getQueryBech32Address(this.bech32Address)
           .balances.find(
-            (bal) => bal.currency.coinMinimalDenom === feeAmount.denom
+            bal => bal.currency.coinMinimalDenom === feeAmount.denom
           );
 
         if (bal) {
@@ -404,10 +404,10 @@ export class AccountSetBase<MsgOpts, Queries> {
     onTxEvents?:
       | ((tx: any) => void)
       | {
-        onBroadcastFailed?: (e?: Error) => void;
-        onBroadcasted?: (txHash: Uint8Array) => void;
-        onFulfill?: (tx: any) => void;
-      }
+          onBroadcastFailed?: (e?: Error) => void;
+          onBroadcasted?: (txHash: Uint8Array) => void;
+          onFulfill?: (tx: any) => void;
+        }
   ) {
     runInAction(() => {
       this._isSendingMsg = type;
@@ -457,8 +457,8 @@ export class AccountSetBase<MsgOpts, Queries> {
       this._isSendingMsg = false;
     });
 
-    const sleep = (milliseconds) => {
-      return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    const sleep = milliseconds => {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
     };
 
     const waitForPendingTransaction = async (
@@ -559,9 +559,9 @@ export class AccountSetBase<MsgOpts, Queries> {
     onTxEvents?:
       | ((tx: any) => void)
       | {
-        onBroadcasted?: (txHash: Uint8Array) => void;
-        onFulfill?: (tx: any) => void;
-      }
+          onBroadcasted?: (txHash: Uint8Array) => void;
+          onFulfill?: (tx: any) => void;
+        }
   ) {
     for (let i = 0; i < this.sendTokenFns.length; i++) {
       const fn = this.sendTokenFns[i];
@@ -587,6 +587,9 @@ export class AccountSetBase<MsgOpts, Queries> {
   }
 
   validateChainId(chainId: string): number {
+    alert('2');
+    alert(JSON.stringify(chainId));
+    console.log('validateChainId', chainId);
     // chain id example: kawaii_6886-1. If chain id input is already a number in string => parse it immediately
     if (isNaN(parseInt(chainId))) {
       const firstSplit = chainId.split('_')[1];

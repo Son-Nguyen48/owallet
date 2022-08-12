@@ -59,11 +59,11 @@ export class InjectedOWallet implements IOWallet {
       addMessageListener: (fn: (e: any) => void) => void;
       postMessage: (message: any) => void;
     } = {
-        addMessageListener: (fn: (e: any) => void) =>
-          window.addEventListener('message', fn),
-        postMessage: (message) =>
-          window.postMessage(message, window.location.origin)
-      },
+      addMessageListener: (fn: (e: any) => void) =>
+        window.addEventListener('message', fn),
+      postMessage: message =>
+        window.postMessage(message, window.location.origin)
+    },
     parseMessage?: (message: any) => any
   ) {
     // listen method when inject send to
@@ -126,42 +126,42 @@ export class InjectedOWallet implements IOWallet {
         const result =
           message.method === 'signDirect'
             ? await (async () => {
-              const receivedSignDoc: {
-                bodyBytes?: Uint8Array | null;
-                authInfoBytes?: Uint8Array | null;
-                chainId?: string | null;
-                accountNumber?: string | null;
-              } = message.args[2];
+                const receivedSignDoc: {
+                  bodyBytes?: Uint8Array | null;
+                  authInfoBytes?: Uint8Array | null;
+                  chainId?: string | null;
+                  accountNumber?: string | null;
+                } = message.args[2];
 
-              const result = await owallet.signDirect(
-                message.args[0],
-                message.args[1],
-                {
-                  bodyBytes: receivedSignDoc.bodyBytes,
-                  authInfoBytes: receivedSignDoc.authInfoBytes,
-                  chainId: receivedSignDoc.chainId,
-                  accountNumber: receivedSignDoc.accountNumber
-                    ? Long.fromString(receivedSignDoc.accountNumber)
-                    : null
-                },
-                message.args[3]
-              );
+                const result = await owallet.signDirect(
+                  message.args[0],
+                  message.args[1],
+                  {
+                    bodyBytes: receivedSignDoc.bodyBytes,
+                    authInfoBytes: receivedSignDoc.authInfoBytes,
+                    chainId: receivedSignDoc.chainId,
+                    accountNumber: receivedSignDoc.accountNumber
+                      ? Long.fromString(receivedSignDoc.accountNumber)
+                      : null
+                  },
+                  message.args[3]
+                );
 
-              return {
-                signed: {
-                  bodyBytes: result.signed.bodyBytes,
-                  authInfoBytes: result.signed.authInfoBytes,
-                  chainId: result.signed.chainId,
-                  accountNumber: result.signed.accountNumber.toString()
-                },
-                signature: result.signature
-              };
-            })()
+                return {
+                  signed: {
+                    bodyBytes: result.signed.bodyBytes,
+                    authInfoBytes: result.signed.authInfoBytes,
+                    chainId: result.signed.chainId,
+                    accountNumber: result.signed.accountNumber.toString()
+                  },
+                  signature: result.signature
+                };
+              })()
             : await owallet[message.method as any](
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              ...JSONUint8Array.unwrap(message.args)
-            );
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                ...JSONUint8Array.unwrap(message.args)
+              );
 
         const proxyResponse: ProxyRequestResponse = {
           type: 'proxy-request-response',
@@ -191,7 +191,7 @@ export class InjectedOWallet implements IOWallet {
   protected requestMethod(method: keyof IOWallet, args: any[]): Promise<any> {
     const bytes = new Uint8Array(8);
     const id: string = Array.from(crypto.getRandomValues(bytes))
-      .map((value) => {
+      .map(value => {
         return value.toString(16);
       })
       .join('');
@@ -251,15 +251,15 @@ export class InjectedOWallet implements IOWallet {
       removeMessageListener: (fn: (e: any) => void) => void;
       postMessage: (message: any) => void;
     } = {
-        addMessageListener: (fn: (e: any) => void) =>
-          window.addEventListener('message', fn),
-        removeMessageListener: (fn: (e: any) => void) =>
-          window.removeEventListener('message', fn),
-        postMessage: (message) =>
-          window.postMessage(message, window.location.origin)
-      },
+      addMessageListener: (fn: (e: any) => void) =>
+        window.addEventListener('message', fn),
+      removeMessageListener: (fn: (e: any) => void) =>
+        window.removeEventListener('message', fn),
+      postMessage: message =>
+        window.postMessage(message, window.location.origin)
+    },
     protected readonly parseMessage?: (message: any) => any
-  ) { }
+  ) {}
 
   async enable(chainIds: string | string[]): Promise<void> {
     await this.requestMethod('enable', [chainIds]);
@@ -455,15 +455,14 @@ export class InjectedOWallet implements IOWallet {
   }
 }
 
-
 export class InjectedEthereum implements Ethereum {
   // we use this chain id for chain id switching from user
   get chainId() {
-    return window.localStorage.getItem("owallet.chainId");
+    return window.localStorage.getItem('owallet.chainId');
   }
 
   set chainId(chainId: string) {
-    window.localStorage.setItem("owallet.chainId", chainId);
+    window.localStorage.setItem('owallet.chainId', chainId);
   }
 
   // public static chainId: string;
@@ -474,11 +473,11 @@ export class InjectedEthereum implements Ethereum {
       addMessageListener: (fn: (e: any) => void) => void;
       postMessage: (message: any) => void;
     } = {
-        addMessageListener: (fn: (e: any) => void) =>
-          window.addEventListener('message', fn),
-        postMessage: (message) =>
-          window.postMessage(message, window.location.origin)
-      },
+      addMessageListener: (fn: (e: any) => void) =>
+        window.addEventListener('message', fn),
+      postMessage: message =>
+        window.postMessage(message, window.location.origin)
+    },
     parseMessage?: (message: any) => any
   ) {
     // listen method when inject send to
@@ -515,18 +514,19 @@ export class InjectedEthereum implements Ethereum {
 
         // TODO: eth_sendTransaction is special case. Other case => pass through custom request RPC without signing
         var result: any;
-        const chainId = message.args[1]
-          ? message.args[1]
-          : window.localStorage.getItem("owallet.chainId")
-            ? window.localStorage.getItem("owallet.chainId")
-            : ethereum.initChainId;
-
+        const chainId =
+          message.args[1] ??
+          window.localStorage.getItem('owallet.chainId') ??
+          ethereum.initChainId;
 
         // console.log("🚀 ~ file: inject.ts ~ line 524 ~ InjectedEthereum ~ eventListener.addMessageListener ~ message.method", message.method)
         // console.log("🚀 ~ file: inject.ts ~ line 524 ~ InjectedEthereum ~ eventListener.addMessageListener ~ message & chain id", message, chainId)
         switch (message.method) {
           case 'eth_signTypedData_v4':
-            result = await ethereum.signEthereumTypeData(chainId, message.args[0]);
+            result = await ethereum.signEthereumTypeData(
+              chainId,
+              message.args[0]
+            );
             break;
           case 'public_key':
             result = await ethereum.getPublicKey(chainId);
@@ -561,8 +561,7 @@ export class InjectedEthereum implements Ethereum {
           case 'eth_chainId' as any:
             if (chainId?.toString()?.startsWith('0x')) {
               result = chainId;
-            }
-            else result = '0x0'
+            } else result = '0x0';
             break;
           case 'wallet_switchEthereumChain' as any:
             result = await ethereum.request({
@@ -570,7 +569,7 @@ export class InjectedEthereum implements Ethereum {
               params: message.args[0],
               chainId
             });
-            window.localStorage.setItem("owallet.chainId", result);
+            window.localStorage.setItem('owallet.chainId', result);
             break;
           case 'eth_getTransactionReceipt' as any:
             try {
@@ -593,7 +592,6 @@ export class InjectedEthereum implements Ethereum {
 
             break;
         }
-
 
         const proxyResponse: ProxyRequestResponse = {
           type: 'proxy-request-response',
@@ -627,7 +625,7 @@ export class InjectedEthereum implements Ethereum {
   ): Promise<any> {
     const bytes = new Uint8Array(8);
     const id: string = Array.from(crypto.getRandomValues(bytes))
-      .map((value) => {
+      .map(value => {
         return value.toString(16);
       })
       .join('');
@@ -686,20 +684,18 @@ export class InjectedEthereum implements Ethereum {
       removeMessageListener: (fn: (e: any) => void) => void;
       postMessage: (message: any) => void;
     } = {
-        addMessageListener: (fn: (e: any) => void) =>
-          window.addEventListener('message', fn),
-        removeMessageListener: (fn: (e: any) => void) =>
-          window.removeEventListener('message', fn),
-        postMessage: (message) =>
-          window.postMessage(message, window.location.origin)
-      },
+      addMessageListener: (fn: (e: any) => void) =>
+        window.addEventListener('message', fn),
+      removeMessageListener: (fn: (e: any) => void) =>
+        window.removeEventListener('message', fn),
+      postMessage: message =>
+        window.postMessage(message, window.location.origin)
+    },
     protected readonly parseMessage?: (message: any) => any
-  ) { }
+  ) {}
 
   async enable() {
-    return await this.requestMethod('eth_requestAccounts', [
-      []
-    ]);
+    return await this.requestMethod('eth_requestAccounts', [[]]);
   }
 
   // THIS IS THE ENTRYPOINT OF THE INJECTED ETHEREUM WHEN USER CALLS window.ethereum.request
