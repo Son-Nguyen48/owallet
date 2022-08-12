@@ -206,9 +206,8 @@ export const TokensCard: FunctionComponent<{
           }}
         >
           {['Tokens', 'NFTs'].map((title: string, i: number) => (
-            <View>
+            <View key={i}>
               <TouchableOpacity
-                key={i}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -243,7 +242,7 @@ export const TokensCard: FunctionComponent<{
 
         {index === 0 ? (
           <CardBody>
-            {tokens.slice(0, 3).map(token => {
+            {tokens.slice(0, 3).map((token) => {
               const priceBalance = priceStore.calculatePrice(token.balance);
               return (
                 <TokenItem

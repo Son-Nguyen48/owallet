@@ -155,7 +155,7 @@ export interface Ethereum {
    * If the connected Ethereum is on the mobile app with the embeded web browser, the mode should be "mobile-web".
    */
   readonly mode: EthereumMode;
-  chainId: string;
+  initChainId: string;
   // send(): Promise<void>;
   request(args: RequestArguments): Promise<any>;
   signAndBroadcastEthereum(chainId: string, data: object): Promise<{ rawTxHex: string }>;

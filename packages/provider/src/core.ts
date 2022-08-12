@@ -59,7 +59,7 @@ export class OWallet implements IOWallet {
     public readonly version: string,
     public readonly mode: OWalletMode,
     protected readonly requester: MessageRequester
-  ) {}
+  ) { }
 
   async enable(chainIds: string | string[]): Promise<void> {
     if (typeof chainIds === 'string') {
@@ -295,10 +295,10 @@ export class Ethereum implements IEthereum {
   constructor(
     public readonly version: string,
     public readonly mode: EthereumMode,
-    public chainId: string,
+    public initChainId: string,
     protected readonly requester: MessageRequester
   ) {
-    this.chainId = chainId;
+    this.initChainId = initChainId;
   }
 
   // async send(): Promise<void> {
@@ -333,7 +333,7 @@ export class Ethereum implements IEthereum {
       console.log("RESULT AFTER ALL!!!!!!!!!!!!")
       return result;
     } catch (error) {
-      console.log(error,'error on send message!!!!!!!!!!!!!!!');
+      console.log(error, 'error on send message!!!!!!!!!!!!!!!');
     }
   }
 
