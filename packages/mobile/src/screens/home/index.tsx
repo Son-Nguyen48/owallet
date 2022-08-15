@@ -22,8 +22,9 @@ import { BIP44Selectable } from './bip44-selectable';
 import { useFocusEffect } from '@react-navigation/native';
 import { ChainUpdaterService } from '@owallet/background';
 import { colors } from '../../themes';
+import { AccountCardEVM } from './account-card-evm';
 
-export const HomeScreen: FunctionComponent = observer((props) => {
+export const HomeScreen: FunctionComponent = observer(props => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const { chainStore, accountStore, queriesStore, priceStore } = useStore();
@@ -101,7 +102,7 @@ export const HomeScreen: FunctionComponent = observer((props) => {
       priceStore.waitFreshResponse(),
       ...queries.queryBalances
         .getQueryBech32Address(account.bech32Address)
-        .balances.map((bal) => {
+        .balances.map(bal => {
           return bal.waitFreshResponse();
         }),
       queries.cosmos.queryRewards
@@ -137,11 +138,19 @@ export const HomeScreen: FunctionComponent = observer((props) => {
       ref={scrollViewRef}
     >
       <BIP44Selectable />
-      <AccountCard containerStyle={styles.containerStyle} />
+      {chainStore.current.networkType === 'cosmos' ? (
+        <AccountCard containerStyle={styles.containerStyle} />
+      ) : (
+        <AccountCardEVM containerStyle={styles.containerStyle} />
+      )}
+
       {tokens.length > 0 ? (
         <TokensCard containerStyle={styles.containerStyle} />
       ) : null}
-      <EarningCard containerStyle={styles.containerEarnStyle} />
+      {chainStore.current.networkType === 'cosmos' ? (
+        <EarningCard containerStyle={styles.containerEarnStyle} />
+      ) : null}
+
       {/* {currentChain.networkType === 'cosmos' && (
         <>
           <MyRewardCard

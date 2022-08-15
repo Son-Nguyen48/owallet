@@ -13,11 +13,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { _keyExtract } from '../../../utils/helper';
 import { CoinGeckoPriceStore } from '@owallet/stores';
 import { RightArrowIcon } from '../../../components/icon';
+import { TokenSymbolEVM } from '../../../components/token-symbol/token-symbol-evm';
 
 interface TokenItemProps {
   containerStyle?: ViewStyle;
   chainInfo: {
     stakeCurrency: Currency;
+    networkType?: string;
   };
   balance: CoinPretty;
   totalBalance?: number;
@@ -58,15 +60,18 @@ export const TokenItem: FunctionComponent<TokenItemProps> = ({
     .hideDenom(true)
     .toString();
 
-  const balanceUsdInPercent = priceBalance
-    ? new IntPretty(
-        priceBalance.toDec().mul(new Dec(100)).quo(new Dec(totalBalance))
-      )
-        .moveDecimalPointRight(2)
-        .maxDecimals(3)
-        .trim(true)
-        .toString() + '%'
-    : '';
+  // const balanceUsdInPercent = priceBalance
+  //   ? new IntPretty(
+  //       priceBalance.toDec().mul(new Dec(100)).quo(new Dec(totalBalance))
+  //     )
+  //       .moveDecimalPointRight(2)
+  //       .maxDecimals(3)
+  //       .trim(true)
+  //       .toString() + '%'
+  //   : '';
+
+  console.log('chain networ', chainInfo.networkType);
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -90,15 +95,28 @@ export const TokenItem: FunctionComponent<TokenItemProps> = ({
           alignItems: 'center'
         }}
       >
-        <TokenSymbol
-          style={{
-            marginRight: spacing['12']
-          }}
-          size={44}
-          chainInfo={chainInfo}
-          currency={balance.currency}
-          imageScale={0.54}
-        />
+        {chainInfo.networkType === 'cosmos' ? (
+          <TokenSymbol
+            style={{
+              marginRight: spacing['12']
+            }}
+            size={44}
+            chainInfo={chainInfo}
+            currency={balance.currency}
+            imageScale={0.54}
+          />
+        ) : (
+          <TokenSymbolEVM
+            style={{
+              marginRight: spacing['12']
+            }}
+            size={44}
+            chainInfo={chainInfo}
+            currency={balance.currency}
+            imageScale={0.54}
+          />
+        )}
+
         <View
           style={{
             justifyContent: 'space-between'

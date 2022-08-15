@@ -35,7 +35,7 @@ export const StakedTokenSymbol: FunctionComponent<{
   );
 };
 
-export const TokenSymbol: FunctionComponent<{
+export const TokenSymbolEVM: FunctionComponent<{
   style?: ViewStyle;
   currency: AppCurrency;
   chainInfo?: {
@@ -50,22 +50,6 @@ export const TokenSymbol: FunctionComponent<{
   chainInfo,
   imageScale = 32 / 44
 }) => {
-  const isStakeCurrency =
-    currency.coinMinimalDenom === chainInfo.stakeCurrency.coinMinimalDenom;
-
-  const deterministicNumber = useMemo(() => {
-    const bytes = Hash.sha256(Buffer.from(currency.coinMinimalDenom));
-    return (
-      (bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24)) >>> 0
-    );
-  }, [currency.coinMinimalDenom]);
-
-  const profileColor = useMemo(() => {
-    const colors = ['red-10', 'yellow-10', 'gray-10'];
-
-    return colors[deterministicNumber % colors.length];
-  }, [deterministicNumber]);
-
   return (
     <View
       style={{
@@ -75,9 +59,7 @@ export const TokenSymbol: FunctionComponent<{
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        backgroundColor: isStakeCurrency
-          ? colors['red-10']
-          : colors[`${profileColor}`],
+        backgroundColor: colors['red-10'],
         ...propStyle
       }}
     >

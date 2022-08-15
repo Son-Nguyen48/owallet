@@ -76,7 +76,9 @@ export const TokensCard: FunctionComponent<{
   const queryBalances = queriesStore
     .get(chainStore.current.chainId)
     .queryBalances.getQueryBech32Address(
-      accountStore.getAccount(chainStore.current.chainId).bech32Address
+      chainStore.current.networkType === 'evm'
+        ? account.evmosHexAddress
+        : account.bech32Address
     );
 
   const tokens = queryBalances.balances.concat(
@@ -242,13 +244,14 @@ export const TokensCard: FunctionComponent<{
 
         {index === 0 ? (
           <CardBody>
-            {tokens.slice(0, 3).map((token) => {
+            {tokens.slice(0, 3).map(token => {
               const priceBalance = priceStore.calculatePrice(token.balance);
               return (
                 <TokenItem
-                  key={token.currency.coinMinimalDenom}
+                  key={token.currency?.coinMinimalDenom}
                   chainInfo={{
-                    stakeCurrency: chainStore.current.stakeCurrency
+                    stakeCurrency: chainStore.current.stakeCurrency,
+                    networkType: chainStore.current.networkType
                   }}
                   balance={token.balance}
                   priceBalance={priceBalance}

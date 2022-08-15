@@ -35,6 +35,7 @@ import { navigate } from '../../router/root';
 import { API } from '../../common/api';
 import { useLoadingScreen } from '../../providers/loading-screen';
 import { AddressQRCodeModal } from '../home/components';
+import { TokenSymbolEVM } from '../../components/token-symbol/token-symbol-evm';
 
 export const TokenDetailScreen: FunctionComponent = observer(props => {
   const { chainStore, queriesStore, accountStore, modalStore } = useStore();
@@ -43,24 +44,26 @@ export const TokenDetailScreen: FunctionComponent = observer(props => {
   const { amountBalance, balanceCoinDenom, priceBalance, balanceCoinFull } =
     props?.route?.params ?? {};
   const account = accountStore.getAccount(chainStore.current.chainId);
-  const queries = queriesStore.get(chainStore.current.chainId);
+  // const queries = queriesStore.get(chainStore.current.chainId);
 
-  const queryDelegated = queries.cosmos.queryDelegations.getQueryBech32Address(
-    account.bech32Address
-  );
-  const delegated = queryDelegated.total;
+  // const queryDelegated = queries.cosmos.queryDelegations.getQueryBech32Address(
+  //   account.bech32Address
+  // );
+  // const delegated = queryDelegated.total;
 
-  const queryUnbonding =
-    queries.cosmos.queryUnbondingDelegations.getQueryBech32Address(
-      account.bech32Address
-    );
+  // const queryUnbonding =
+  //   queries.cosmos.queryUnbondingDelegations.getQueryBech32Address(
+  //     account.bech32Address
+  //   );
 
-  const unbonding = queryUnbonding.total;
-  const stakedSum = delegated.add(unbonding);
+  // const unbonding = queryUnbonding.total;
+  // const stakedSum = delegated.add(unbonding);
   const queryBalances = queriesStore
     .get(chainStore.current.chainId)
     .queryBalances.getQueryBech32Address(
-      accountStore.getAccount(chainStore.current.chainId).bech32Address
+      chainStore.current.networkType === 'evm'
+        ? account.evmosHexAddress
+        : account.bech32Address
     );
 
   const tokens = queryBalances.balances
@@ -206,17 +209,32 @@ export const TokenDetailScreen: FunctionComponent = observer(props => {
               alignItems: 'center'
             }}
           >
-            <TokenSymbol
-              style={{
-                marginRight: spacing['12']
-              }}
-              size={44}
-              chainInfo={{
-                stakeCurrency: chainStore.current.stakeCurrency
-              }}
-              currency={tokens?.[0]?.balance?.currency}
-              imageScale={0.54}
-            />
+            {chainStore.current.networkType === 'evm' ? (
+              <TokenSymbolEVM
+                style={{
+                  marginRight: spacing['12']
+                }}
+                size={44}
+                chainInfo={{
+                  stakeCurrency: chainStore.current.stakeCurrency
+                }}
+                currency={tokens?.[0]?.balance?.currency}
+                imageScale={0.54}
+              />
+            ) : (
+              <TokenSymbol
+                style={{
+                  marginRight: spacing['12']
+                }}
+                size={44}
+                chainInfo={{
+                  stakeCurrency: chainStore.current.stakeCurrency
+                }}
+                currency={tokens?.[0]?.balance?.currency}
+                imageScale={0.54}
+              />
+            )}
+
             <View
               style={{
                 justifyContent: 'space-between'

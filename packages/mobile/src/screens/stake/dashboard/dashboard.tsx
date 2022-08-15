@@ -45,7 +45,10 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
             ...styles.containerMyStaking
           }}
         >
-          <MyRewardCard />
+          {chainStore.current.networkType === 'cosmos' ? (
+            <MyRewardCard />
+          ) : null}
+
           <View
             style={{
               alignItems: 'flex-start',
@@ -112,7 +115,9 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
               {`${staked.maxDecimals(6).trim(true).shrink(true).toString()}`}
             </Text>
           </View>
-          <DelegationsCard />
+          {chainStore.current.networkType === 'cosmos' ? (
+            <DelegationsCard />
+          ) : null}
         </View>
       </View>
     </PageWithScrollViewInBottomTabView>
