@@ -1,4 +1,10 @@
-import React, { FunctionComponent, ReactElement, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 import { observer } from 'mobx-react-lite';
 import { Card, CardBody } from '../../components/card';
 import { View, ViewStyle, Image } from 'react-native';
@@ -30,6 +36,8 @@ export const AccountCardEVM: FunctionComponent<{
   const { chainStore, accountStore, queriesStore, priceStore, modalStore } =
     useStore();
 
+  const [evmAddress, setEvmAddress] = useState(null);
+
   const deterministicNumber = useCallback(chainInfo => {
     const bytes = Hash.sha256(
       Buffer.from(chainInfo.stakeCurrency.coinMinimalDenom)
@@ -53,6 +61,12 @@ export const AccountCardEVM: FunctionComponent<{
 
   const account = accountStore.getAccount(chainStore.current.chainId);
   const queries = queriesStore.get(chainStore.current.chainId);
+
+  console.log('account', account.evmosHexAddress);
+
+  useEffect(() => {
+    setEvmAddress(account.evmosHexAddress);
+  }, [account?.evmosHexAddress]);
 
   // const queryStakable = queries.queryBalances.getQueryBech32Address(
   //   account.bech32Address
@@ -286,8 +300,13 @@ export const AccountCardEVM: FunctionComponent<{
               </View>
 
               <AddressCopyable
-                address={account.bech32Address}
+                address={
+                  chainStore.current.networkType === 'cosmos'
+                    ? account.bech32Address
+                    : evmAddress
+                }
                 maxCharacters={22}
+                networkType={chainStore.current.networkType}
               />
             </View>
             <TouchableOpacity onPress={_onPressMyWallet}>
