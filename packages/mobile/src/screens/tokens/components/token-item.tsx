@@ -70,8 +70,6 @@ export const TokenItem: FunctionComponent<TokenItemProps> = ({
   //       .toString() + '%'
   //   : '';
 
-  console.log('chain networ', chainInfo.networkType);
-
   return (
     <TouchableOpacity
       activeOpacity={0.7}

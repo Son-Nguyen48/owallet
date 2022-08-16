@@ -73,7 +73,6 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
   const decimals = useRef(chainStore.current.feeCurrencies[0].coinDecimals);
 
   useEffect(() => {
-    console.log('dataSign: ', dataSign);
     try {
       if (dataSign) {
         decimals.current = dataSign?.data?.data?.data?.decimals;
@@ -98,7 +97,9 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
           setGasPrice(estimatedGasPrice);
           gasConfig.setGas(estimatedGasLimit);
           feeConfig.setFee(
-            new Big(estimatedGasLimit).mul(estimatedGasPrice).toFixed(decimals.current)
+            new Big(estimatedGasLimit)
+              .mul(estimatedGasPrice)
+              .toFixed(decimals.current)
           );
         }
       }
@@ -107,7 +108,7 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
     }
   }, [dataSign]);
 
-  console.log(gasPrice, 'GAS PRICE!!!!!!!!!!!');
+  // console.log(gasPrice, 'GAS PRICE!!!!!!!!!!!');
   console.log(feeConfig.feeRaw, 'FEE RAWWWWWWWWW!!!!!!!!!!!');
 
   const memoConfig = useMemoConfig(chainStore, current.chainId);
@@ -292,7 +293,7 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
                     color=""
                     // disabled={}
                     // data-loading={signInteractionStore.isLoading}
-                    onClick={async (e) => {
+                    onClick={async e => {
                       e.preventDefault();
 
                       if (needSetIsProcessing) {
@@ -319,7 +320,7 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
                     color=""
                     disabled={approveIsDisabled}
                     data-loading={signInteractionStore.isLoading}
-                    onClick={async (e) => {
+                    onClick={async e => {
                       e.preventDefault();
 
                       if (needSetIsProcessing) {

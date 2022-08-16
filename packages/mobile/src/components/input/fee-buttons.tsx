@@ -62,7 +62,7 @@ class FeeButtonState {
 }
 
 export const FeeButtons: FunctionComponent<FeeButtonsProps> = observer(
-  (props) => {
+  props => {
     // This may be not the good way to handle the states across the components.
     // But, rather than using the context API with boilerplate code, just use the mobx state to simplify the logic.
     const [feeButtonState] = useState(() => new FeeButtonState());
@@ -163,7 +163,7 @@ export const FeeButtonsInner: FunctionComponent<FeeButtonsProps> = observer(
             <View
               style={{
                 ...styles.containerIcon,
-                backgroundColor: colors['yellow-10'],
+                backgroundColor: colors['yellow-10']
               }}
             >
               <AverageIconFill color={'#1E1E1E'} size={size} />
@@ -217,8 +217,7 @@ export const FeeButtonsInner: FunctionComponent<FeeButtonsProps> = observer(
           rippleColor={style.get('color-primary-100').color}
           onPress={onPress}
         >
-          <View
-          >
+          <View>
             {renderIconTypeFee(label)}
             <Text
               style={{
