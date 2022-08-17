@@ -1,6 +1,6 @@
 import { IFeeEthereumConfig, IGasConfig } from '@owallet/hooks';
 import React, { FunctionComponent, useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { TextStyle, ViewStyle } from 'react-native';
 import { TextInput } from '../../components/input';
 import Big from 'big.js';
@@ -12,7 +12,7 @@ export const FeeInput: FunctionComponent<{
   gasConfig: IGasConfig;
   gasPrice: string;
   label: string;
-  feeConfig: IFeeEthereumConfig;
+  feeConfig: any;
   decimals: number;
 }> = ({
   labelStyle,
@@ -46,6 +46,11 @@ export const FeeInput: FunctionComponent<{
       onChangeText={text => {
         feeConfig.setFee(text);
       }}
+      inputRight={
+        <View>
+          <Text>{feeConfig.chainInfo.stakeCurrency.coinDenom}</Text>
+        </View>
+      }
       keyboardType="number-pad"
     />
   );
