@@ -144,7 +144,7 @@ export const NftsScreen: FunctionComponent = observer(props => {
             fontWeight: '700'
           }}
         >
-          {formatContractAddress(item.name)}
+          {item.name.length > 11 ? formatContractAddress(item.name) : item.name}
         </Text>
 
         <Text

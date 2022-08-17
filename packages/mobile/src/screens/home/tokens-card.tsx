@@ -115,6 +115,8 @@ export const TokensCard: FunctionComponent<{
   }, [account.bech32Address]);
 
   const _renderFlatlistItem = ({ item }) => {
+    console.log('item', item.offer, item);
+
     return (
       <TouchableOpacity
         style={styles.flatListItem}
@@ -146,7 +148,9 @@ export const TokensCard: FunctionComponent<{
           }}
         >
           <Text style={styles.itemText}>
-            {formatContractAddress(item.name)}
+            {item.name.length > 11
+              ? formatContractAddress(item.name)
+              : item.name}
           </Text>
 
           {item.version === 1 ? (
@@ -160,7 +164,7 @@ export const TokensCard: FunctionComponent<{
                 ? `${convertAmount(item.offer.amount)} ${item.offer.denom}`
                 : ''}
             </Text>
-          ) : (
+          ) : item.offer ? (
             <View>
               <Text
                 style={{
@@ -180,7 +184,7 @@ export const TokensCard: FunctionComponent<{
                 To {convertAmount(item.offer?.highestPrice)} {item.offer?.denom}
               </Text>
             </View>
-          )}
+          ) : null}
         </View>
       </TouchableOpacity>
     );
