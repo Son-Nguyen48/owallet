@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useEffect } from 'react';
+import React, { FunctionComponent, useMemo, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../stores';
 import { StyleSheet, View, ViewStyle } from 'react-native';
@@ -9,11 +9,13 @@ import { ValidatorThumbnail } from '../../../components/thumbnail';
 import { colors, spacing, typography } from '../../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ValidatorThumbnails } from '@owallet/common';
+import { API } from '../../../common/api';
 
 export const DelegationsCard: FunctionComponent<{
   containerStyle?: ViewStyle;
 }> = observer(({ containerStyle }) => {
   const { chainStore, accountStore, queriesStore } = useStore();
+  const [validatorList, setValidators] = useState([]);
 
   const account = accountStore.getAccount(chainStore.current.chainId);
   const queries = queriesStore.get(chainStore.current.chainId);
@@ -55,7 +57,20 @@ export const DelegationsCard: FunctionComponent<{
   }, [validators]);
 
   const smartNavigation = useSmartNavigation();
-  useEffect(() => {}, []);
+
+  useEffect(() => {
+    (async function get() {
+      try {
+        const res = await API.getValidatorList(
+          {},
+          {
+            baseURL: 'https://api.scan.orai.io'
+          }
+        );
+        setValidators(res.data.data);
+      } catch (error) {}
+    })();
+  }, []);
 
   return (
     <View>
@@ -66,6 +81,8 @@ export const DelegationsCard: FunctionComponent<{
           }}
         >
           {delegations.map(del => {
+            console.log('del', del);
+
             const val = validatorsMap.get(del.validator_address);
             if (!val) {
               return null;
@@ -81,6 +98,10 @@ export const DelegationsCard: FunctionComponent<{
               val.operator_address
             );
 
+            const foundValidator = validatorList.find(
+              v => v.operator_address === del.validator_address
+            );
+
             return (
               <TouchableOpacity
                 key={del.validator_address}
@@ -91,7 +112,8 @@ export const DelegationsCard: FunctionComponent<{
                 }}
                 onPress={() => {
                   smartNavigation.navigate('Delegate.Detail', {
-                    validatorAddress: del.validator_address
+                    validatorAddress: del.validator_address,
+                    apr: foundValidator?.apr ?? 0
                   });
                 }}
               >

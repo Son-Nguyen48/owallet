@@ -115,8 +115,6 @@ export const TokensCard: FunctionComponent<{
   }, [account.bech32Address]);
 
   const _renderFlatlistItem = ({ item }) => {
-    console.log('item', item.offer, item);
-
     return (
       <TouchableOpacity
         style={styles.flatListItem}

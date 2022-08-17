@@ -50,7 +50,9 @@ class ProgressiveImage extends React.Component {
           { backgroundColor: this.state.loading ? '#e1e4e8' : '#fff' }
         ]}
       >
-        {this.state.loading ? <ActivityIndicator /> : null}
+        {this.state.loading ? (
+          <ActivityIndicator style={{ marginTop: 20 }} />
+        ) : null}
         <Animated.Image
           {...props}
           source={thumbnailSource}

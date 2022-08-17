@@ -41,6 +41,10 @@ export const API = {
   getNFTOwners: ({ token_id }, config: AxiosRequestConfig) => {
     let url = `assets/${token_id}/owners?size=10&offset=0`;
     return API.get(url, config);
+  },
+  getValidatorList: ({}, config: AxiosRequestConfig) => {
+    let url = `v1/validators?limit=100`;
+    return API.get(url, config);
   }
 };
 
