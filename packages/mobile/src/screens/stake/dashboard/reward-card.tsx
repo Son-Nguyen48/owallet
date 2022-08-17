@@ -51,14 +51,14 @@ export const MyRewardCard: FunctionComponent<{
             fontWeight: '700'
           }}
         >
-          My Pending Rewards (
-          <Text style={{
+          My Pending Rewards
+          {/* <Text style={{
             ...typography['h7'],
             color: colors['purple-700']
           }}>
             {`${apy.maxDecimals(2).trim(true).toString()}% per year`}
           </Text>
-          )
+          ) */}
         </Text>
 
         <View>
@@ -114,7 +114,7 @@ export const MyRewardCard: FunctionComponent<{
                     {},
                     {},
                     {
-                      onBroadcasted: (txHash) => {
+                      onBroadcasted: txHash => {
                         analyticsStore.logEvent('Claim reward tx broadcasted', {
                           chainId: chainStore.current.chainId,
                           chainName: chainStore.current.chainName

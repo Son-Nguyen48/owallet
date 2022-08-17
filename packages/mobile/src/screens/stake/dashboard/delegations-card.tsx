@@ -13,9 +13,9 @@ import { API } from '../../../common/api';
 
 export const DelegationsCard: FunctionComponent<{
   containerStyle?: ViewStyle;
-}> = observer(({ containerStyle }) => {
+  validatorList?: Array<any>;
+}> = observer(({ containerStyle, validatorList }) => {
   const { chainStore, accountStore, queriesStore } = useStore();
-  const [validatorList, setValidators] = useState([]);
 
   const account = accountStore.getAccount(chainStore.current.chainId);
   const queries = queriesStore.get(chainStore.current.chainId);
@@ -58,20 +58,6 @@ export const DelegationsCard: FunctionComponent<{
 
   const smartNavigation = useSmartNavigation();
 
-  useEffect(() => {
-    (async function get() {
-      try {
-        const res = await API.getValidatorList(
-          {},
-          {
-            baseURL: 'https://api.scan.orai.io'
-          }
-        );
-        setValidators(res.data.data);
-      } catch (error) {}
-    })();
-  }, []);
-
   return (
     <View>
       {delegations && delegations.length > 0 && (
@@ -81,8 +67,6 @@ export const DelegationsCard: FunctionComponent<{
           }}
         >
           {delegations.map(del => {
-            console.log('del', del);
-
             const val = validatorsMap.get(del.validator_address);
             if (!val) {
               return null;
