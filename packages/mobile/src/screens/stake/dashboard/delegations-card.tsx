@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useEffect } from 'react';
+import React, { FunctionComponent, useMemo, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../stores';
 import { StyleSheet, View, ViewStyle } from 'react-native';
@@ -9,10 +9,12 @@ import { ValidatorThumbnail } from '../../../components/thumbnail';
 import { colors, spacing, typography } from '../../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ValidatorThumbnails } from '@owallet/common';
+import { API } from '../../../common/api';
 
 export const DelegationsCard: FunctionComponent<{
   containerStyle?: ViewStyle;
-}> = observer(({ containerStyle }) => {
+  validatorList?: Array<any>;
+}> = observer(({ containerStyle, validatorList }) => {
   const { chainStore, accountStore, queriesStore } = useStore();
 
   const account = accountStore.getAccount(chainStore.current.chainId);
@@ -55,7 +57,6 @@ export const DelegationsCard: FunctionComponent<{
   }, [validators]);
 
   const smartNavigation = useSmartNavigation();
-  useEffect(() => {}, []);
 
   return (
     <View>
@@ -81,6 +82,10 @@ export const DelegationsCard: FunctionComponent<{
               val.operator_address
             );
 
+            const foundValidator = validatorList.find(
+              v => v.operator_address === del.validator_address
+            );
+
             return (
               <TouchableOpacity
                 key={del.validator_address}
@@ -91,7 +96,8 @@ export const DelegationsCard: FunctionComponent<{
                 }}
                 onPress={() => {
                   smartNavigation.navigate('Delegate.Detail', {
-                    validatorAddress: del.validator_address
+                    validatorAddress: del.validator_address,
+                    apr: foundValidator?.apr ?? 0
                   });
                 }}
               >
