@@ -187,6 +187,7 @@ const { SmartNavigatorProvider, useSmartNavigation } =
       };
       'Validator.Details': {
         validatorAddress: string;
+        apr: number;
       };
       'Validator.List': {
         validatorSelector?: (validatorAddress: string) => void;

@@ -1,25 +1,47 @@
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { PageWithScrollViewInBottomTabView } from '../../../components/page';
 import { StyleSheet, View, Image } from 'react-native';
 import { colors, typography, spacing, metrics } from '../../../themes';
 import { CText as Text } from '../../../components/text';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ArrowOpsiteUpDownIcon } from '../../../components/icon';
+// import { ArrowOpsiteUpDownIcon } from '../../../components/icon';
 import { _keyExtract } from '../../../utils/helper';
 import { useSmartNavigation } from '../../../navigation.provider';
 import { MyRewardCard } from './reward-card';
 import { DelegationsCard } from './delegations-card';
 import { useStore } from '../../../stores';
 import { observer } from 'mobx-react-lite';
+import { API } from '../../../common/api';
 
 export const StakingDashboardScreen: FunctionComponent = observer(() => {
   const smartNavigation = useSmartNavigation();
   const safeAreaInsets = useSafeAreaInsets();
   const { chainStore, accountStore, queriesStore } = useStore();
+  const [validators, setValidators] = useState([]);
 
   const account = accountStore.getAccount(chainStore.current.chainId);
   const queries = queriesStore.get(chainStore.current.chainId);
+
+  useEffect(() => {
+    (async function get() {
+      try {
+        const res = await API.getValidatorList(
+          {},
+          {
+            baseURL: 'https://api.scan.orai.io'
+          }
+        );
+        setValidators(res.data.data);
+      } catch (error) {}
+    })();
+  }, []);
 
   const staked = queries.cosmos.queryDelegations.getQueryBech32Address(
     account.bech32Address
