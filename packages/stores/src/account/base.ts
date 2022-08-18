@@ -126,7 +126,15 @@ export class AccountSetBase<MsgOpts, Queries> {
           onBroadcastFailed?: (e?: Error) => void;
           onBroadcasted?: (txHash: Uint8Array) => void;
           onFulfill?: (tx: any) => void;
-        }
+        },
+    nftOptions?: {
+      type: string;
+      contract_addr: string;
+      token_id: string;
+      recipient?: string;
+      amount?: string;
+      to?: string;
+    }
   ) => Promise<boolean>)[] = [];
 
   constructor(
@@ -293,7 +301,15 @@ export class AccountSetBase<MsgOpts, Queries> {
           onBroadcastFailed?: (e?: Error) => void;
           onBroadcasted?: (txHash: Uint8Array) => void;
           onFulfill?: (tx: any) => void;
-        }
+        },
+    nftOptions?: {
+      type: string;
+      contract_addr: string;
+      token_id: string;
+      recipient?: string;
+      amount?: string;
+      to?: string;
+    }
   ) {
     runInAction(() => {
       this._isSendingMsg = type;
@@ -457,8 +473,8 @@ export class AccountSetBase<MsgOpts, Queries> {
       this._isSendingMsg = false;
     });
 
-    const sleep = milliseconds => {
-      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    const sleep = (milliseconds) => {
+      return new Promise((resolve) => setTimeout(resolve, milliseconds));
     };
 
     const waitForPendingTransaction = async (
@@ -561,7 +577,15 @@ export class AccountSetBase<MsgOpts, Queries> {
       | {
           onBroadcasted?: (txHash: Uint8Array) => void;
           onFulfill?: (tx: any) => void;
-        }
+        },
+    nftOptions?: {
+      type: string;
+      contract_addr: string;
+      token_id: string;
+      recipient?: string;
+      amount?: string;
+      to?: string;
+    }
   ) {
     for (let i = 0; i < this.sendTokenFns.length; i++) {
       const fn = this.sendTokenFns[i];
@@ -574,7 +598,8 @@ export class AccountSetBase<MsgOpts, Queries> {
           memo,
           stdFee,
           signOptions,
-          onTxEvents
+          onTxEvents,
+          nftOptions
         )
       ) {
         return;
@@ -587,9 +612,6 @@ export class AccountSetBase<MsgOpts, Queries> {
   }
 
   validateChainId(chainId: string): number {
-    alert('2');
-    alert(JSON.stringify(chainId));
-    console.log('validateChainId', chainId);
     // chain id example: kawaii_6886-1. If chain id input is already a number in string => parse it immediately
     if (isNaN(parseInt(chainId))) {
       const firstSplit = chainId.split('_')[1];
@@ -626,9 +648,6 @@ export class AccountSetBase<MsgOpts, Queries> {
       } else {
         aminoMsgs = msgs;
       }
-
-      console.log({ msgs });
-      
 
       if (aminoMsgs.length === 0) {
         throw new Error('There is no msg to send');
@@ -698,10 +717,6 @@ export class AccountSetBase<MsgOpts, Queries> {
           this.bech32Address,
           signDoc,
           signOptions
-        );
-        console.log(
-          '🚀 ~ file: base.ts ~ line 696 ~ AccountSetBase<MsgOpts, ~ signResponse',
-          signResponse
         );
 
         signedTx = cosmos.tx.v1beta1.TxRaw.encode({
