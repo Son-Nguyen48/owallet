@@ -61,7 +61,7 @@ const bindValueTxInfo = (label: string, value: string) => {
     case 'Transaction hash':
     case 'From':
     case 'To':
-      return formatContractAddress(value);
+      return formatContractAddress(value ?? '');
 
     default:
       return value;

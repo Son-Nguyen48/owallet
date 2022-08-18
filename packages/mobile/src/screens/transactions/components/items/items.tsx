@@ -41,12 +41,14 @@ export const TransactionItem: FunctionComponent<TransactionItemProps> = ({
           marginTop: spacing['8'],
           textTransform: 'uppercase',
           color:
-            amount == 0 || title === 'Received Token'
+            amount == 0 || title === 'Received Token' || title === 'Reward'
               ? colors['green-500']
               : colors['red-500']
         }}
       >
-        {amount == 0 || title === 'Received Token' ? '+' : '-'}
+        {amount == 0 || title === 'Received Token' || title === 'Reward'
+          ? '+'
+          : '-'}
         {amount} {denom}
       </Text>
     );
