@@ -138,7 +138,7 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
             </Text>
           </View>
           {chainStore.current.networkType === 'cosmos' ? (
-            <DelegationsCard />
+            <DelegationsCard validatorList={validators} />
           ) : null}
         </View>
       </View>

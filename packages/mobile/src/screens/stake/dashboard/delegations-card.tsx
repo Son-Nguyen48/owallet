@@ -13,7 +13,7 @@ import { API } from '../../../common/api';
 
 export const DelegationsCard: FunctionComponent<{
   containerStyle?: ViewStyle;
-  validatorList?: Array<any>;
+  validatorList: Array<any>;
 }> = observer(({ containerStyle, validatorList }) => {
   const { chainStore, accountStore, queriesStore } = useStore();
 
@@ -82,7 +82,7 @@ export const DelegationsCard: FunctionComponent<{
               val.operator_address
             );
 
-            const foundValidator = validatorList.find(
+            const foundValidator = validatorList?.find(
               v => v.operator_address === del.validator_address
             );
 
