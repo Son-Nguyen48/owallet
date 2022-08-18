@@ -99,20 +99,21 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
   };
 
   return (
-    <HeaderLayout
-      showChainName={false}
-      canChangeChainInfo={false}
-      alternativeTitle={intl.formatMessage({
-        id: 'setting.token.add'
-      })}
-      onBackButton={
-        interactionInfo.interaction
-          ? undefined
-          : () => {
-              history.goBack();
-            }
-      }
-    >
+    // <HeaderLayout
+    //   showChainName={false}
+    //   canChangeChainInfo={false}
+    //   alternativeTitle={intl.formatMessage({
+    //     id: 'setting.token.add'
+    //   })}
+    //   onBackButton={
+    //     interactionInfo.interaction
+    //       ? undefined
+    //       : () => {
+    //           history.goBack();
+    //         }
+    //   }
+    // >
+    <>
       <Form
         className={style.container}
         onSubmit={form.handleSubmit(async (data) => {
@@ -136,7 +137,7 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
               ) {
                 await tokensStore.approveSuggestedToken(currency);
               } else {
-                console.log("REACH ADD TOKEN!")
+                console.log('REACH ADD TOKEN!');
                 await tokensOf.addToken(currency);
               }
             } else {
@@ -258,6 +259,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          style={{
+            color: '#353945'
+          }}
           label={intl.formatMessage({
             id: 'setting.token.add.name'
           })}
@@ -266,6 +270,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          style={{
+            color: '#353945'
+          }}
           label={intl.formatMessage({
             id: 'setting.token.add.symbol'
           })}
@@ -274,6 +281,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          style={{
+            color: '#353945'
+          }}
           label={intl.formatMessage({
             id: 'setting.token.add.decimals'
           })}
@@ -286,6 +296,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
             label={intl.formatMessage({
               id: 'setting.token.add.secret20.viewing-key'
             })}
+            style={{
+              color: '#353945'
+            }}
             name="viewingKey"
             autoComplete="off"
             ref={form.register({
@@ -328,6 +341,7 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
           <FormattedMessage id="setting.token.add.button.submit" />
         </Button>
       </Form>
-    </HeaderLayout>
+      {/* </HeaderLayout> */}
+    </>
   );
 });

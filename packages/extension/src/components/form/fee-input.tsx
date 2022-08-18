@@ -7,6 +7,7 @@ import {
 } from '@owallet/hooks';
 import { observer } from 'mobx-react-lite';
 import Big from 'big.js';
+import { Input as InputEvm } from '../../components/form';
 
 export interface GasInputProps {
   feeConfig: IFeeEthereumConfig;
@@ -17,11 +18,22 @@ export interface GasInputProps {
   className?: string;
   defaultValue?: number;
   gasPrice?: number | string | Big;
+
+  denom?: any;
 }
 
 // TODO: Handle the max block gas limit(?)
 export const FeeInput: FunctionComponent<GasInputProps> = observer(
-  ({ feeConfig, label, className, defaultValue, gasConfig, gasPrice, decimals }) => {
+  ({
+    feeConfig,
+    label,
+    className,
+    defaultValue,
+    gasConfig,
+    gasPrice,
+    decimals,
+    denom
+  }) => {
     const [inputId] = useState(() => {
       const bytes = new Uint8Array(4);
       crypto.getRandomValues(bytes);
@@ -30,8 +42,10 @@ export const FeeInput: FunctionComponent<GasInputProps> = observer(
 
     useEffect(() => {
       try {
-        if (gasConfig.gasRaw !== "NaN" && gasPrice != "NaN") {
-          feeConfig.setFee(new Big(parseInt(gasConfig.gasRaw)).mul(gasPrice).toFixed(decimals));
+        if (gasConfig.gasRaw !== 'NaN' && gasPrice != 'NaN') {
+          feeConfig.setFee(
+            new Big(parseInt(gasConfig.gasRaw)).mul(gasPrice).toFixed(decimals)
+          );
         }
       } catch (error) {
         console.log(error);
@@ -45,18 +59,48 @@ export const FeeInput: FunctionComponent<GasInputProps> = observer(
             {label}
           </Label>
         ) : null}
-        <Input
+        <InputEvm
+          type="number"
+          styleInputGroup={{
+            boxShadow: '0 1px 3px rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%)'
+          }}
+          value={parseFloat(feeConfig.feeRaw)}
+          style={{
+            backgroundColor: 'rgba(230, 232, 236, 0.2)'
+          }}
+          onChange={(e) => {
+            feeConfig.setFee(e.target.value);
+            e.preventDefault()
+          }}
+          id={inputId}
+          append={
+            <span
+              style={{
+                padding: 10,
+                color: '#777e90',
+                textTransform: 'uppercase'
+              }}
+            >
+              {denom?.feeCurrency?.coinDenom || 'ORAI'}
+            </span>
+          }
+        />
+        {/* <Input
           id={inputId}
           className="form-control-alternative"
           type="number"
-          value={parseFloat(feeConfig.feeRaw)}
+          value={
+            parseFloat(feeConfig.feeRaw).toString() +
+            ' ' +
+            denom?.feeCurrency?.coinDenom
+          }
           onChange={(e) => {
             feeConfig.setFee(e.target.value);
             e.preventDefault();
           }}
           defaultValue={defaultValue}
           autoComplete="off"
-        />
+        /> */}
       </FormGroup>
     );
   }

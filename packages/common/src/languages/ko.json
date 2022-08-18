@@ -51,6 +51,8 @@
   "setting.connections.confirm.delete-connection.paragraph": "이 연결을 삭제하시겠습니까?",
 
   "setting.address-book.button.add": "주소 추가",
+  "setting.address-book.button.delete": "삭제",
+  "setting.address-book.button.edit": "편집하다",
   "setting.address-book.add-address.title": "주소 추가",
   "setting.address-book.edit-address.title": "주소 편집",
   "setting.address-book.name": "이름",
@@ -253,6 +255,9 @@
   "fee-buttons.select.low": "느림",
   "fee-buttons.select.average": "평균",
   "fee-buttons.select.high": "빠름",
+
+  "fee-buttons.select.slow": "느린",
+  "fee-buttons.select.fast": "빠른",
 
   "input.recipient.error.invalid-bech32": "잘못된 주소입니다",
   "input.recipient.error.invalid-evm-address": "",

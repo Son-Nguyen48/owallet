@@ -9,12 +9,13 @@ import {
   Label,
   Input,
   FormFeedback,
-  ModalBody,
   Modal,
   InputGroup,
   Button,
-  FormText
+  FormText,
+  ModalBody
 } from 'reactstrap';
+// import Modal from 'react-modal';
 import { AddressBookPage } from '../../pages/setting/address-book';
 
 import styleAddressInput from './address-input.module.scss';
@@ -47,6 +48,7 @@ export interface AddressInputProps {
   disableAddressBook?: boolean;
 
   disabled?: boolean;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 export const AddressInput: FunctionComponent<AddressInputProps> = observer(
@@ -59,7 +61,8 @@ export const AddressInput: FunctionComponent<AddressInputProps> = observer(
     disableAddressBook,
     disabled = false,
     placeholder,
-    inputStyle
+    inputStyle,
+    inputRef
   }) => {
     const intl = useIntl();
 
@@ -123,12 +126,10 @@ export const AddressInput: FunctionComponent<AddressInputProps> = observer(
       <React.Fragment>
         <Modal
           isOpen={isAddressBookOpen}
-          backdrop={false}
-          className={styleAddressInput.fullModal}
-          wrapClassName={styleAddressInput.fullModal}
-          contentClassName={styleAddressInput.fullModal}
+          toggle={() => setIsAddressBookOpen(false)}
+          centered
         >
-          <ModalBody className={styleAddressInput.fullModal}>
+          <ModalBody>
             <AddressBookPage
               onBackButton={() => setIsAddressBookOpen(false)}
               hideChainDropdown={true}
@@ -144,13 +145,18 @@ export const AddressInput: FunctionComponent<AddressInputProps> = observer(
               {label}
             </Label>
           ) : null}
-          <InputGroup>
+          <InputGroup
+            style={{
+              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
+            }}
+          >
             <Input
               id={inputId}
               className={classnames(
                 'form-control-alternative',
                 styleAddressInput.input
               )}
+              innerRef={inputRef}
               value={recipientConfig.rawRecipient}
               onChange={(e) => {
                 recipientConfig.setRawRecipient(e.target.value);
@@ -164,6 +170,7 @@ export const AddressInput: FunctionComponent<AddressInputProps> = observer(
               <Button
                 className={styleAddressInput.addressBookButton}
                 type="button"
+                outline={true}
                 onClick={() => setIsAddressBookOpen(true)}
                 disabled={disabled}
               >

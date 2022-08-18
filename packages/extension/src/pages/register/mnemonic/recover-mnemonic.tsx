@@ -142,6 +142,9 @@ export const RecoverMnemonicPage: FunctionComponent<{
             placeholder={intl.formatMessage({
               id: 'register.create.textarea.mnemonic.place-holder'
             })}
+            style={{
+              border: '1px solid rgba(8, 4, 28, 0.12)',
+            }}
             name="words"
             rows={3}
             ref={register({
@@ -192,6 +195,9 @@ export const RecoverMnemonicPage: FunctionComponent<{
             label={intl.formatMessage({
               id: 'register.name'
             })}
+            styleInputGroup={{
+              border: '1px solid rgba(8, 4, 28, 0.12)'
+            }}
             type="text"
             name="name"
             ref={register({
@@ -220,12 +226,18 @@ export const RecoverMnemonicPage: FunctionComponent<{
                     }
                   }
                 })}
+                styleInputGroup={{
+                  border: '1px solid rgba(8, 4, 28, 0.12)'
+                }}
                 error={errors.password && errors.password.message}
               />
               <PasswordInput
                 label={intl.formatMessage({
                   id: 'register.create.input.confirm-password'
                 })}
+                styleInputGroup={{
+                  border: '1px solid rgba(8, 4, 28, 0.12)'
+                }}
                 name="confirmPassword"
                 ref={register({
                   required: intl.formatMessage({

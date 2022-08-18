@@ -54,6 +54,12 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
     queriesStore
   } = useStore();
 
+  useEffect(() => {
+    return () => {
+      signInteractionStore.reject();
+    };
+  }, []);
+
   const [signer, setSigner] = useState('');
   const [origin, setOrigin] = useState<string | undefined>();
   const [isADR36WithString, setIsADR36WithString] = useState<
@@ -192,17 +198,25 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
   })();
 
   return (
-    <HeaderLayout
-      showChainName={alternativeTitle == null}
-      alternativeTitle={alternativeTitle != null ? alternativeTitle : undefined}
-      canChangeChainInfo={false}
-      onBackButton={
-        interactionInfo.interactionInternal
-          ? () => {
-              history.goBack();
-            }
-          : undefined
-      }
+    // <HeaderLayout
+    //   showChainName={alternativeTitle == null}
+    //   alternativeTitle={alternativeTitle != null ? alternativeTitle : undefined}
+    //   canChangeChainInfo={false}
+    //   onBackButton={
+    //     interactionInfo.interactionInternal
+    //       ? () => {
+    //           history.goBack();
+    //         }
+    //       : undefined
+    //   }
+    // >
+    <div
+      style={{
+        padding: 20,
+        backgroundColor: '#FFFFFF',
+        height: '100%',
+        overflowX: 'auto'
+      }}
     >
       {
         /*
@@ -211,11 +225,24 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
          */
         isLoaded ? (
           <div className={style.container}>
+            <div
+              style={{
+                color: '#353945',
+                fontSize: 24,
+                fontWeight: 500,
+                textAlign: 'center',
+                paddingBottom: 24
+              }}
+            >
+              {chainStore?.current?.raw?.chainName || 'Oraichain'}
+            </div>
             <div className={classnames(style.tabs)}>
               <ul>
-                <li className={classnames({ active: tab === Tab.Details })}>
+                <li className={classnames({ activeTabs: tab === Tab.Details })}>
                   <a
-                    className={style.tab}
+                    className={classnames(style.tab, {
+                      activeText: tab === Tab.Details
+                    })}
                     onClick={() => {
                       setTab(Tab.Details);
                     }}
@@ -225,9 +252,11 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
                     })}
                   </a>
                 </li>
-                <li className={classnames({ active: tab === Tab.Data })}>
+                <li className={classnames({ activeTabs: tab === Tab.Data })}>
                   <a
-                    className={style.tab}
+                    className={classnames(style.tab, {
+                      activeText: tab === Tab.Data
+                    })}
                     onClick={() => {
                       setTab(Tab.Data);
                     }}
@@ -248,11 +277,11 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
               {
                 tab === Tab.Details && (
                   // signDocHelper.signDocWrapper?.isADR36SignDoc ? (
-                  //   <ADR36SignDocDetailsTab
-                  //     signDocWrapper={signDocHelper.signDocWrapper}
-                  //     isADR36WithString={isADR36WithString}
-                  //     origin={origin}
-                  //   />
+                  // <ADR36SignDocDetailsTab
+                  //   signDocWrapper={signDocHelper.signDocWrapper}
+                  //   isADR36WithString={isADR36WithString}
+                  //   origin={origin}
+                  // />
                   // ) : (
                   <EthereumDetailsTab
                     dataSign={dataSign}
@@ -277,12 +306,7 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
             <div className={style.buttons}>
               {keyRingStore.keyRingType === 'ledger' &&
               signInteractionStore.isLoading ? (
-                <Button
-                  className={style.button}
-                  color="primary"
-                  disabled={true}
-                  outline
-                >
+                <Button className={style.button} disabled={true} outline>
                   <FormattedMessage id="sign.button.confirm-ledger" />{' '}
                   <i className="fa fa-spinner fa-spin fa-fw" />
                 </Button>
@@ -299,15 +323,14 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
                       if (needSetIsProcessing) {
                         setIsProcessing(true);
                       }
-
                       await signInteractionStore.reject();
-
                       if (
                         interactionInfo.interaction &&
                         !interactionInfo.interactionInternal
                       ) {
                         window.close();
                       }
+                      history.goBack()
                     }}
                     outline
                   >
@@ -375,6 +398,7 @@ export const SignEthereumPage: FunctionComponent = observer(() => {
           </div>
         )
       }
-    </HeaderLayout>
+      {/* </HeaderLayout> */}
+    </div>
   );
 });

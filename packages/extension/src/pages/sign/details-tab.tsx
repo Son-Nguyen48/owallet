@@ -107,26 +107,6 @@ export const DetailsTab: FunctionComponent<{
         <div id="signing-messages" className={styleDetailsTab.msgContainer}>
           {renderedMsgs}
         </div>
-        {!preferNoSetMemo ? (
-          <MemoInput
-            memoConfig={memoConfig}
-            label={intl.formatMessage({ id: 'sign.info.memo' })}
-            rows={1}
-          />
-        ) : (
-          <React.Fragment>
-            <Label for="memo" className="form-control-label">
-              <FormattedMessage id="sign.info.memo" />
-            </Label>
-            <div id="memo" style={{ marginBottom: '8px' }}>
-              <div style={{ color: memoConfig.memo ? undefined : '#AAAAAA' }}>
-                {memoConfig.memo
-                  ? memoConfig.memo
-                  : intl.formatMessage({ id: 'sign.info.warning.empty-memo' })}
-              </div>
-            </div>
-          </React.Fragment>
-        )}
         {!preferNoSetFee || !feeConfig.isManual ? (
           <FeeButtons
             feeConfig={feeConfig}
@@ -141,15 +121,18 @@ export const DetailsTab: FunctionComponent<{
               <FormattedMessage id="sign.info.fee" />
             </Label>
             <div id="fee-price">
-              <div>
+              <div className={styleDetailsTab.feePrice}>
                 {feeConfig.fee.maxDecimals(6).trim(true).toString()}
                 {priceStore.calculatePrice(
                   feeConfig.fee,
                   language.fiatCurrency
                 ) ? (
                   <div
-                    className="ml-2"
-                    style={{ display: 'inline-block', fontSize: '12px' }}
+                    style={{
+                      display: 'inline-block',
+                      fontSize: '12px',
+                      color: '#353945'
+                    }}
                   >
                     {priceStore
                       .calculatePrice(feeConfig.fee, language.fiatCurrency)
@@ -184,6 +167,33 @@ export const DetailsTab: FunctionComponent<{
             }
           </React.Fragment>
         ) : null}
+        {!preferNoSetMemo ? (
+          <MemoInput
+            memoConfig={memoConfig}
+            label={intl.formatMessage({ id: 'sign.info.memo' })}
+            rows={1}
+          />
+        ) : (
+          <React.Fragment>
+            <Label for="memo" className="form-control-label">
+              <FormattedMessage id="sign.info.memo" />
+            </Label>
+            <div
+              id="memo"
+              style={{
+                marginBottom: '8px',
+                color: memoConfig.memo ? '#353945' : '#AAAAAA',
+                fontSize: 12,
+              }}
+            >
+              <div>
+                {memoConfig.memo
+                  ? memoConfig.memo
+                  : intl.formatMessage({ id: 'sign.info.warning.empty-memo' })}
+              </div>
+            </div>
+          </React.Fragment>
+        )}
       </div>
     );
   }

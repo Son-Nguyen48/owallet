@@ -84,6 +84,13 @@ export const AccountView: FunctionComponent = observer(() => {
                   : '...'}
               </Address>
             </span>
+            <div style={{ width: 6 }} />
+            <img
+              src={require('../../public/assets/img/filled.svg')}
+              alt="filled"
+              width={16}
+              height={16}
+            />
           </div>
           <div style={{ flex: 1 }} />
         </div>
@@ -120,6 +127,13 @@ export const AccountView: FunctionComponent = observer(() => {
                   : '...'}
               </Address>
             </span>
+            <div style={{ width: 6 }} />
+            <img
+              src={require('../../public/assets/img/filled.svg')}
+              alt="filled"
+              width={16}
+              height={16}
+            />
           </div>
           {/* <div
             className={styleAccount.address}

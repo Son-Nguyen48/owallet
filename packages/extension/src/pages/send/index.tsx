@@ -7,7 +7,7 @@ import {
 } from '../../components/form';
 import { useStore } from '../../stores';
 
-import { HeaderLayout } from '../../layouts';
+import { HeaderLayout, LayoutSpace, LayoutHidePage } from '../../layouts';
 
 import { observer } from 'mobx-react-lite';
 
@@ -25,9 +25,11 @@ import { fitPopupWindow, openPopupWindow, PopupSize } from '@owallet/popup';
 import { EthereumEndpoint } from '@owallet/common';
 import classNames from 'classnames';
 
-export const SendPage: FunctionComponent = observer(() => {
+export const SendPage: FunctionComponent<{
+  coinMinimalDenom?: string;
+}> = observer(({ coinMinimalDenom }) => {
   const history = useHistory();
-  let search = useLocation().search;
+  let search = useLocation().search || coinMinimalDenom || '';
   if (search.startsWith('?')) {
     search = search.slice(1);
   }
@@ -38,7 +40,7 @@ export const SendPage: FunctionComponent = observer(() => {
     defaultMemo: string | undefined;
     detached: string | undefined;
   };
-
+  const inputRef = React.useRef(null);
   useEffect(() => {
     // Scroll to top on page mounted.
     if (window.scrollTo) {
@@ -46,6 +48,11 @@ export const SendPage: FunctionComponent = observer(() => {
     }
   }, []);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [coinMinimalDenom]);
   const intl = useIntl();
 
   const notification = useNotification();
@@ -111,69 +118,70 @@ export const SendPage: FunctionComponent = observer(() => {
   const txStateIsValid = sendConfigError == null;
 
   return (
-    <HeaderLayout
-      showChainName
-      canChangeChainInfo={false}
-      onBackButton={
-        isDetachedPage
-          ? undefined
-          : () => {
-              history.goBack();
-            }
-      }
-      rightRenderer={
-        isDetachedPage ? undefined : (
-          <div
-            style={{
-              height: '64px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingRight: '20px'
-            }}
-          >
-            <i
-              className="fas fa-external-link-alt"
-              style={{
-                cursor: 'pointer',
-                padding: '4px',
-                color: '#ffffff'
-              }}
-              onClick={async (e) => {
-                e.preventDefault();
+    // <HeaderLayout
+    //   showChainName={false}
+    //   canChangeChainInfo={false}
+    //   onBackButton={
+    //     isDetachedPage
+    //       ? undefined
+    //       : () => {
+    //           history.goBack();
+    //         }
+    //   }
+    //   rightRenderer={
+    //     isDetachedPage ? undefined : (
+    //       <div
+    //         style={{
+    //           height: '64px',
+    //           display: 'flex',
+    //           flexDirection: 'row',
+    //           alignItems: 'center',
+    //           paddingRight: '20px'
+    //         }}
+    //       >
+    //         <i
+    //           className="fas fa-external-link-alt"
+    //           style={{
+    //             cursor: 'pointer',
+    //             padding: '4px',
+    //             color: '#ffffff'
+    //           }}
+    //           onClick={async (e) => {
+    //             e.preventDefault();
 
-                const windowInfo = await browser.windows.getCurrent();
+    //             const windowInfo = await browser.windows.getCurrent();
 
-                let queryString = `?detached=true&defaultDenom=${sendConfigs.amountConfig.sendCurrency.coinMinimalDenom}`;
-                if (sendConfigs.recipientConfig.rawRecipient) {
-                  queryString += `&defaultRecipient=${sendConfigs.recipientConfig.rawRecipient}`;
-                }
-                if (sendConfigs.amountConfig.amount) {
-                  queryString += `&defaultAmount=${sendConfigs.amountConfig.amount}`;
-                }
-                if (sendConfigs.memoConfig.memo) {
-                  queryString += `&defaultMemo=${sendConfigs.memoConfig.memo}`;
-                }
+    //             let queryString = `?detached=true&defaultDenom=${sendConfigs.amountConfig.sendCurrency.coinMinimalDenom}`;
+    //             if (sendConfigs.recipientConfig.rawRecipient) {
+    //               queryString += `&defaultRecipient=${sendConfigs.recipientConfig.rawRecipient}`;
+    //             }
+    //             if (sendConfigs.amountConfig.amount) {
+    //               queryString += `&defaultAmount=${sendConfigs.amountConfig.amount}`;
+    //             }
+    //             if (sendConfigs.memoConfig.memo) {
+    //               queryString += `&defaultMemo=${sendConfigs.memoConfig.memo}`;
+    //             }
 
-                await openPopupWindow(
-                  browser.runtime.getURL(`/popup.html#/send${queryString}`),
-                  undefined,
-                  {
-                    top: (windowInfo.top || 0) + 80,
-                    left:
-                      (windowInfo.left || 0) +
-                      (windowInfo.width || 0) -
-                      PopupSize.width -
-                      20
-                  }
-                );
-                window.close();
-              }}
-            />
-          </div>
-        )
-      }
-    >
+    //             await openPopupWindow(
+    //               browser.runtime.getURL(`/popup.html#/send${queryString}`),
+    //               undefined,
+    //               {
+    //                 top: (windowInfo.top || 0) + 80,
+    //                 left:
+    //                   (windowInfo.left || 0) +
+    //                   (windowInfo.width || 0) -
+    //                   PopupSize.width -
+    //                   20
+    //               }
+    //             );
+    //             window.close();
+    //           }}
+    //         />
+    //       </div>
+    //     )
+    //   }
+    // >
+    <>
       <form
         className={style.formContainer}
         onSubmit={async (e: any) => {
@@ -208,21 +216,6 @@ export const SendPage: FunctionComponent = observer(() => {
                       tx,
                       'TX INFO ON SEND PAGE!!!!!!!!!!!!!!!!!!!!!'
                     );
-                    notification.push({
-                      placement: 'top-center',
-                      // type: tx?.status === '0x1' ? 'success' : 'danger',
-                      type: 'info',
-                      duration: 5,
-                      // content:
-                      //   tx?.status === '0x1'
-                      //     ? `Transaction successful with tx: ${tx?.transactionHash}`
-                      //     : `Transaction failed with tx: ${tx?.transactionHash}`,
-                      content: 'Transaction succeeded!',
-                      canDelete: true,
-                      transition: {
-                        duration: 0.25
-                      }
-                    });
                   }
                 }
               );
@@ -267,6 +260,7 @@ export const SendPage: FunctionComponent = observer(() => {
         <div className={style.formInnerContainer}>
           <div>
             <AddressInput
+              inputRef={inputRef}
               recipientConfig={sendConfigs.recipientConfig}
               memoConfig={sendConfigs.memoConfig}
               label={intl.formatMessage({ id: 'send.input.recipient' })}
@@ -291,11 +285,11 @@ export const SendPage: FunctionComponent = observer(() => {
               priceStore={priceStore}
               label={intl.formatMessage({ id: 'send.input.fee' })}
               feeSelectLabels={{
-                low: intl.formatMessage({ id: 'fee-buttons.select.low' }),
+                low: intl.formatMessage({ id: 'fee-buttons.select.slow' }),
                 average: intl.formatMessage({
                   id: 'fee-buttons.select.average'
                 }),
-                high: intl.formatMessage({ id: 'fee-buttons.select.high' })
+                high: intl.formatMessage({ id: 'fee-buttons.select.fast' })
               }}
               gasLabel={intl.formatMessage({ id: 'send.input.gas' })}
             />
@@ -322,6 +316,7 @@ export const SendPage: FunctionComponent = observer(() => {
           </Button>
         </div>
       </form>
-    </HeaderLayout>
+    </>
+    // {/* </HeaderLayout> */}
   );
 });

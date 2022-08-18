@@ -16,9 +16,9 @@
     "version": "npx zx ./scripts/lerna-lifecyle-version.mjs"
   },
   "dependencies": {
-    "@cosmjs/encoding": "^0.24.0-alpha.25",
-    "@cosmjs/launchpad": "^0.24.0-alpha.25",
-    "@cosmjs/proto-signing": "^0.24.0-alpha.25",
+    "@cosmjs/encoding": "^0.28.11",
+    "@cosmjs/launchpad": "^0.27.1",
+    "@cosmjs/proto-signing": "^0.28.11",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@owallet/analytics": "^0.9.14",
     "@owallet/background": "^0.9.16",
@@ -70,8 +70,6 @@
     "webextension-polyfill": "^0.9.0"
   },
   "devDependencies": {
-    "@types/w3c-web-hid": "^1.0.2",
-    "@types/w3c-web-usb": "^1.0.5",
     "@types/amplitude-js": "^8.0.1",
     "@types/chart.js": "^2.9.25",
     "@types/chrome": "0.0.88",
@@ -84,6 +82,8 @@
     "@types/react-router-dom": "^5.1.2",
     "@types/reactstrap": "^8.4.2",
     "@types/sha.js": "^2.4.0",
+    "@types/w3c-web-hid": "^1.0.2",
+    "@types/w3c-web-usb": "^1.0.5",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
@@ -93,7 +93,6 @@
     "identity-obj-proxy": "^3.0.0",
     "sass": "~1.32.12",
     "sass-loader": "^7.3.1",
-    "serialize-javascript": ">=3.1.0",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.2",
     "webpack-bundle-analyzer": "^3.9.0",

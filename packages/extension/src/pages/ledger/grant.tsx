@@ -321,7 +321,7 @@ const Instruction: FunctionComponent<{
             />
           ) : null}
         </h1>
-        <p>{paragraph}</p>
+        <p style={{ color: '#777e90'}}>{paragraph}</p>
         {children}
       </div>
     </div>

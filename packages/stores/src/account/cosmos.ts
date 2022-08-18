@@ -566,7 +566,8 @@ export class CosmosAccount {
       | {
           onBroadcasted?: (txHash: Uint8Array) => void;
           onFulfill?: (tx: any) => void;
-        }
+        },
+    currency?: string
   ) {
     const msgs = validatorAddresses.map((validatorAddress) => {
       return {
@@ -610,6 +611,19 @@ export class CosmosAccount {
       signOptions,
       this.txEventsWithPreOnFulfill(onTxEvents, (tx) => {
         if (tx.code == null || tx.code === 0) {
+          console.log({ currency });
+          // After succeeding to send token, refresh the balance.
+          const queryBalance = this.queries.queryBalances
+            .getQueryBech32Address(this.base.bech32Address)
+            .balances.find((bal) => {
+              return (
+                bal.currency.coinMinimalDenom === currency //currency.coinMinimalDenom
+              );
+            });
+
+          if (queryBalance) {
+            queryBalance.fetch();
+          }
           // After succeeding to withdraw rewards, refresh rewards.
           this.queries.cosmos.queryRewards
             .getQueryBech32Address(this.base.bech32Address)

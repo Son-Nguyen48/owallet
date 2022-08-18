@@ -116,8 +116,18 @@ export const GenerateMnemonicModePage: FunctionComponent<{
           <ButtonGroup size="sm" style={{ marginBottom: '4px' }}>
             <Button
               type="button"
-              color="primary"
+              color=""
               outline={newMnemonicConfig.numWords !== NumWords.WORDS12}
+              style={{
+                backgroundColor:
+                  newMnemonicConfig.numWords !== NumWords.WORDS12
+                    ? 'white'
+                    : '#7664E4',
+                color:
+                  newMnemonicConfig.numWords !== NumWords.WORDS12
+                    ? 'gray'
+                    : 'white'
+              }}
               onClick={() => {
                 newMnemonicConfig.setNumWords(NumWords.WORDS12);
               }}
@@ -126,7 +136,17 @@ export const GenerateMnemonicModePage: FunctionComponent<{
             </Button>
             <Button
               type="button"
-              color="primary"
+              color=""
+              style={{
+                backgroundColor:
+                  newMnemonicConfig.numWords !== NumWords.WORDS24
+                    ? 'white'
+                    : '#7664E4',
+                color:
+                  newMnemonicConfig.numWords !== NumWords.WORDS24
+                    ? 'gray'
+                    : 'white'
+              }}
               outline={newMnemonicConfig.numWords !== NumWords.WORDS24}
               onClick={() => {
                 newMnemonicConfig.setNumWords(NumWords.WORDS24);
@@ -147,6 +167,10 @@ export const GenerateMnemonicModePage: FunctionComponent<{
       >
         <TextArea
           className={style.mnemonic}
+          style={{
+            border: '1px solid rgba(8, 4, 28, 0.12)',
+            color: '#7664e4',
+          }}
           autoCapitalize="none"
           placeholder={intl.formatMessage({
             id: 'register.create.textarea.mnemonic.place-holder'
@@ -177,6 +201,9 @@ export const GenerateMnemonicModePage: FunctionComponent<{
           label={intl.formatMessage({
             id: 'register.name'
           })}
+          styleInputGroup={{
+            border: '1px solid rgba(8, 4, 28, 0.12)'
+          }}
           type="text"
           name="name"
           ref={register({
@@ -192,6 +219,9 @@ export const GenerateMnemonicModePage: FunctionComponent<{
               label={intl.formatMessage({
                 id: 'register.create.input.password'
               })}
+              styleInputGroup={{
+                border: '1px solid rgba(8, 4, 28, 0.12)'
+              }}
               name="password"
               ref={register({
                 required: intl.formatMessage({
@@ -211,6 +241,9 @@ export const GenerateMnemonicModePage: FunctionComponent<{
               label={intl.formatMessage({
                 id: 'register.create.input.confirm-password'
               })}
+              styleInputGroup={{
+                border: '1px solid rgba(8, 4, 28, 0.12)'
+              }}
               name="confirmPassword"
               ref={register({
                 required: intl.formatMessage({

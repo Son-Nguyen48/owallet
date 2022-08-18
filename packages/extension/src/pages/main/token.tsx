@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState
+} from 'react';
 
 import styleToken from './token.module.scss';
 import { observer } from 'mobx-react-lite';
@@ -7,6 +12,7 @@ import { useHistory } from 'react-router';
 import { Hash } from '@owallet/crypto';
 import { ObservableQueryBalanceInner } from '@owallet/stores';
 import classmames from 'classnames';
+import { Input } from '../../components/form';
 import { UncontrolledTooltip } from 'reactstrap';
 import { WrongViewingKeyError } from '@owallet/stores';
 import { useNotification } from '../../components/notification';
@@ -19,8 +25,9 @@ import { NetworkType } from '@owallet/types';
 
 const TokenView: FunctionComponent<{
   balance: ObservableQueryBalanceInner;
+  active?: boolean;
   onClick: () => void;
-}> = observer(({ onClick, balance }) => {
+}> = observer(({ onClick, balance, active }) => {
   const { chainStore, accountStore, tokensStore, priceStore } = useStore();
   const language = useLanguage();
   const [colors] = useState([
@@ -138,7 +145,13 @@ const TokenView: FunctionComponent<{
       </div>
       <div className={styleToken.innerContainer}>
         <div className={styleToken.content}>
-          <div className={styleToken.name}>{name}</div>
+          <div
+            className={classmames(styleToken.name, {
+              activeToken: active
+            })}
+          >
+            {name}
+          </div>
           <div className={styleToken.amount}>
             {amount.maxDecimals(6).toString()}
             {balance.isFetching ? (
@@ -220,17 +233,20 @@ const TokenView: FunctionComponent<{
 
 export const TokensView: FunctionComponent<{
   tokens: ObservableQueryBalanceInner[];
-  networkType: NetworkType;
-}> = observer(({ tokens, networkType }) => {
+  handleClickToken?: (token) => void;
+  coinMinimalDenom?: string;
+}> = observer(({ tokens, handleClickToken, coinMinimalDenom }) => {
   // const { chainStore, accountStore, queriesStore } = useStore();
 
   // const accountInfo = accountStore.getAccount(chainStore.current.chainId);
 
   const displayTokens = tokens
-    .filter((token) => token?.balance)
+    .filter((token) => {
+      return token?.balance;
+    })
     .sort((a, b) => {
-      const aDecIsZero = a.balance.toDec().isZero();
-      const bDecIsZero = b.balance.toDec().isZero();
+      const aDecIsZero = a.balance?.toDec()?.isZero();
+      const bDecIsZero = b.balance?.toDec()?.isZero();
 
       if (aDecIsZero && !bDecIsZero) {
         return 1;
@@ -242,25 +258,73 @@ export const TokensView: FunctionComponent<{
       return a.currency.coinDenom < b.currency.coinDenom ? -1 : 1;
     });
 
+
   const history = useHistory();
+  const [search, setSearch] = useState('');
 
   return (
     <div className={styleToken.tokensContainer}>
       <h1 className={styleToken.title}>Tokens</h1>
-      {displayTokens.map((token, i) => {
-        return (
-          <TokenView
-            key={i.toString()}
-            balance={token}
-            onClick={() => {
-              history.push({
-                pathname: networkType === 'evm' ? '/send-evm' : '/send',
-                search: `?defaultDenom=${token.currency.coinMinimalDenom}`
-              });
-            }}
-          />
-        );
-      })}
+      <div>
+        <Input
+          type={'text'}
+          styleInputGroup={{
+            display: 'flex',
+            flexDirection: 'row-reverse'
+          }}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+          }}
+          placeholder={'Search Chain Coin'}
+          append={
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 50
+              }}
+            >
+              <img src={require('../../public/assets/img/light.svg')} alt="" />
+            </div>
+          }
+        />
+      </div>
+      {displayTokens
+        .filter(
+          (token) =>
+            token?.currency?.coinMinimalDenom?.includes(search.toUpperCase()) ||
+            token?.currency?.coinDenom?.includes(search.toUpperCase()) ||
+            token?.currency?.coinGeckoId?.includes(search.toUpperCase()) ||
+            token?.currency?.coinMinimalDenom?.includes(search.toLowerCase()) ||
+            token?.currency?.coinDenom?.includes(search.toLowerCase()) ||
+            token?.currency?.coinGeckoId?.includes(search.toLowerCase())
+        )
+        .map((token, i) => {
+          return (
+            <TokenView
+              key={i.toString()}
+              balance={token}
+              active={
+                `?defaultDenom=${token.currency.coinMinimalDenom}` ==
+                coinMinimalDenom
+              }
+              onClick={() => {
+                if (handleClickToken) {
+                  handleClickToken(
+                    `?defaultDenom=${token.currency.coinMinimalDenom}`
+                  );
+                  return;
+                }
+                history.push({
+                  pathname: '/send',
+                  search: `?defaultDenom=${token.currency.coinMinimalDenom}`
+                });
+              }}
+            />
+          );
+        })}
     </div>
   );
 });

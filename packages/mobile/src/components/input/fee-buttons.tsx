@@ -239,7 +239,7 @@ export const FeeButtonsInner: FunctionComponent<FeeButtonsProps> = observer(
           {price ? (
             <Text
               style={{
-                fontSize: 10.5,
+                fontSize: 10,
                 color: '#636366',
                 lineHeight: 16
               }}

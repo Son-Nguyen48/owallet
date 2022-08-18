@@ -18,7 +18,10 @@ import TransportBLE, {
   bleManager
 } from '@ledgerhq/react-native-hw-transport-ble';
 import { LoadingSpinner } from '../../components/spinner';
-import { Ledger, LedgerInitErrorOn } from '@owallet/background';
+import {
+  LedgerInternal as Ledger,
+  LedgerInitErrorOn
+} from '@owallet/background';
 import { getLastUsedLedgerDeviceId } from '../../utils/ledger';
 import { RectButton } from '../../components/rect-button';
 import { useUnmount } from '../../hooks';
@@ -257,9 +260,7 @@ export const LedgerGranterModal: FunctionComponent<{
                   'items-center'
                 ])}
               >
-                <LoadingSpinner
-                  size={20}
-                />
+                <LoadingSpinner size={20} />
               </View>
             </View>
           ) : undefined
@@ -366,7 +367,7 @@ const LedgerNanoBLESelector: FunctionComponent<{
 
     try {
       setIsConnecting(true);
-      const ledger = await Ledger.init(() => TransportBLE.open(deviceId));
+      const ledger = await Ledger.init('ble', [deviceId]);
       await ledger.close();
 
       return true;

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import styleCoinInput from './coin-input.module.scss';
 
 import {
+  Button,
   ButtonDropdown,
   DropdownItem,
   DropdownMenu,
@@ -11,6 +12,7 @@ import {
   FormFeedback,
   FormGroup,
   Input,
+  InputGroup,
   Label
 } from 'reactstrap';
 import { observer } from 'mobx-react-lite';
@@ -38,6 +40,10 @@ export interface CoinInputProps {
 
   disableAllBalance?: boolean;
 }
+
+const reduceStringAssets = (str) => {
+  return str && str.split('(')[0] || '';
+};
 
 export const CoinInput: FunctionComponent<CoinInputProps> = observer(
   ({ amountConfig, className, label, disableAllBalance, placeholder }) => {
@@ -113,12 +119,12 @@ export const CoinInput: FunctionComponent<CoinInputProps> = observer(
             : new CoinPretty(amountConfig.sendCurrency, new Int(0))
         );
       }
-    }, [tokenDenom]);
+    }, [tokenDenom, chainStore.current.chainId]);
 
     const selectableCurrencies = amountConfig.sendableCurrencies
       .filter((cur) => {
         const bal = queryBalances.getBalanceFromCurrency(cur);
-        return !bal.toDec().isZero();
+        return !bal?.toDec()?.isZero();
       })
       .sort((a, b) => {
         return a.coinDenom < b.coinDenom ? -1 : 1;
@@ -202,39 +208,71 @@ export const CoinInput: FunctionComponent<CoinInputProps> = observer(
                     amountConfig.toggleIsMax();
                   }}
                 >
-                  <span>{`Balance: ${balance
-                    .trim(true)
-                    .maxDecimals(6)
-                    .toString()}`}</span>
+                  <span>{`Total: ${
+                    reduceStringAssets(
+                      balance?.trim(true)?.maxDecimals(6)?.toString()
+                    ) || 0
+                  }`}</span>
                 </div>
               ) : null}
             </Label>
           ) : null}
-          <Input
-            className={classnames(
-              'form-control-alternative',
-              styleCoinInput.input
-            )}
-            id={`input-${randomId}`}
-            type="number"
-            value={amountConfig.amount}
-            onChange={(e) => {
-              e.preventDefault();
-
-              amountConfig.setAmount(e.target.value);
+          <InputGroup
+            style={{
+              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
             }}
-            step={new Dec(1)
-              .quo(
-                DecUtils.getTenExponentNInPrecisionRange(
-                  amountConfig.sendCurrency?.coinDecimals ?? 0
+          >
+            <Input
+              className={classnames(
+                'form-control-alternative',
+                styleCoinInput.input
+              )}
+              id={`input-${randomId}`}
+              type="number"
+              value={amountConfig.amount}
+              onChange={(e) => {
+                e.preventDefault();
+
+                amountConfig.setAmount(e.target.value);
+              }}
+              step={new Dec(1)
+                .quo(
+                  DecUtils.getTenExponentNInPrecisionRange(
+                    amountConfig.sendCurrency?.coinDecimals ?? 0
+                  )
                 )
-              )
-              .toString(amountConfig.sendCurrency?.coinDecimals ?? 0)}
-            min={0}
-            disabled={amountConfig.isMax}
-            autoComplete="off"
-            placeholder={placeholder}
-          />
+                .toString(amountConfig.sendCurrency?.coinDecimals ?? 0)}
+              min={0}
+              disabled={amountConfig.isMax}
+              autoComplete="off"
+              placeholder={placeholder}
+            />
+            <div
+              style={{ padding: 7.5, textAlign: 'center', cursor: 'pointer' }}
+              onClick={(e) => {
+                e.preventDefault();
+                amountConfig.toggleIsMax();
+              }}
+            >
+              <div
+                style={{
+                  width: 50,
+                  height: 28,
+                  backgroundColor: amountConfig.isMax ? '#7664E4' : '#f8fafc',
+                  borderRadius: 4
+                }}
+              >
+                <span
+                  style={{
+                    color: amountConfig.isMax ? 'white' : '#7664E4',
+                    fontSize: 14
+                  }}
+                >
+                  MAX
+                </span>
+              </div>
+            </div>
+          </InputGroup>
           {errorText != null ? (
             <FormFeedback style={{ display: 'block', position: 'sticky' }}>
               {errorText}

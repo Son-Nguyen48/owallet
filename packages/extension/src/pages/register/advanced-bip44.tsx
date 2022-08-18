@@ -96,7 +96,17 @@ export const AdvancedBIP44Option: FunctionComponent<{
         await confirm.confirm({
           paragraph: intl.formatMessage({
             id: 'register.bip44.confirm.clear'
-          })
+          }),
+          styleParagraph: {
+            color: '#A6A6B0'
+          },
+          yes: 'Yes',
+          no: 'No',
+          styleNoBtn: {
+            background: '#F5F5FA',
+            border: '1px solid #3B3B45',
+            color: '#3B3B45'
+          }
         })
       ) {
         setIsOpen(false);

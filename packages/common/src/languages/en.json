@@ -31,7 +31,7 @@
   "main.menu.address-book": "Address Book",
   "main.menu.token-list": "Token List",
   "main.menu.sign-out": "Sign out",
-  "main.menu.footer.github": "Check it out on GitHub",
+  "main.menu.footer.github": "Check on GitHub",
 
   "main.update-chain.confirm.paragraph": "Chain information has changed. Verify that a chain upgrade has taken place.",
   "main.update-chain.confirm.yes": "Proceed",
@@ -52,15 +52,17 @@
   "setting.connections.confirm.delete-connection.title": "Disable Connection",
   "setting.connections.confirm.delete-connection.paragraph": "Are you sure you want to disable this connection?",
 
-  "setting.address-book.button.add": "Add New",
+  "setting.address-book.button.add": "Add more",
+  "setting.address-book.button.delete": "Delete",
+  "setting.address-book.button.edit": "Edit",
   "setting.address-book.add-address.title": "Add Address",
   "setting.address-book.edit-address.title": "Edit Address",
   "setting.address-book.name": "Name",
   "setting.address-book.address": "Address",
   "setting.address-book.address.error.invalid": "Invalid address",
-  "setting.address-book.memo": "Default Memo (Optional)",
+  "setting.address-book.memo": "Memo (Optional)",
   "setting.address-book.confirm.delete-address.title": "Delete Address",
-  "setting.address-book.confirm.delete-address.paragraph": "Are you sure you want to delete this address?",
+  "setting.address-book.confirm.delete-address.paragraph": "Are you sure want to delete this address?",
   "setting.address-book.button.save": "Save",
 
   "setting.export-to-mobile": "Link OWallet Mobile",
@@ -89,7 +91,7 @@
 
   "setting.export": "View Mnemonic Seed",
   "setting.export.private-key": "View Private Key",
-  "setting.export.warning": "Please input your password to proceed",
+  "setting.export.warning": "Input your password to proceed",
   "setting.export.input.password": "Password",
   "setting.export.input.password.error.required": "Password is required",
   "setting.export.input.password.error.invalid": "Invalid password",
@@ -97,8 +99,9 @@
 
   "setting.clear": "Delete Account",
   "setting.clear.alert": "Make sure you’ve backed up your mnemonic seed before proceeding.",
-  "setting.clear.button.back-up": "Back-up account",
-  "setting.clear.warning": "By deleting your account, you will no longer have access to your account on OWallet.",
+  "setting.clear.button.back-up": "Back-up",
+  "setting.clear.warning-old": "By deleting your account, you will no longer have access to your account on OWallet.",
+  "setting.clear.warning": "If deleting account, you will no longer have access to your account Oraichain.",
   "setting.clear.input.password": "Password",
   "setting.clear.input.password.error.required": "Password is required",
   "setting.clear.input.password.error.invalid": "Invalid password",
@@ -114,7 +117,7 @@
   "setting.token.add.secret20.checkbox.use-suggested-viewing-key": "Use webpage suggested viewing key",
   "setting.token.add.secret20.viewing-key": "Viewing Key",
 
-  "setting.token.manage.confirm.remove-token": "Are you sure you’d like to disable this token? You wil not be able to see your balance or transfer until you register a viewing key.",
+  "setting.token.manage.confirm.remove-token": "Are you sure you’d like to disable this token? You will not be able to see your balance or transfer until you register a viewing key.",
   "setting.token.manage.notification.viewing-key.copy": "Viewing key copied!",
 
   "register.name": "Account name",
@@ -127,7 +130,7 @@
 
   "register.intro.button.new-account.title": "Create a new wallet",
   "register.intro.button.new-account.content": "Create a new wallet using a new seed",
-  "register.intro.button.import-account.title": "Import existing wallet",
+  "register.intro.button.import-account.title": "Import from Mnemonic / Private key ",
   "register.intro.button.import-account.content": "Use a 12/24 word seed to import an existing wallet",
   "register.intro.sub-content": "All sensitive information is stored only on your device.{br}This process does not require an internet connection.",
 
@@ -152,7 +155,7 @@
   "register.import.textarea.private-key.error.invalid-length": "Invalid length of private key",
   "register.create.button.next": "Next",
 
-  "register.ledger.title": "Import ledger",
+  "register.ledger.title": "Import Ledger Nano X",
 
   "register.verify.button.register": "Register",
 
@@ -241,7 +244,7 @@
   "sign.list.message.cosmos-sdk/MsgVote.title": "Vote",
   "sign.list.message.cosmos-sdk/MsgVote.content": "Vote <b>{option}</b> on <b>Proposal {id}</b>",
 
-  "sign.list.message.wasm.button.details": "Details",
+  "sign.list.message.wasm.button.details": "More",
   "sign.list.message.wasm.button.close": "Close",
   "sign.list.message.wasm/MsgInstantiateContract.title": "Instantiate Wasm Contract",
   "sign.list.message.wasm/MsgInstantiateContract.content": "Instantiate code ID <b>{codeId}</b> contract with<only-admin-exist> <b>{admin}</b> admin account and</only-admin-exist> <b>{label}</b> label<only-funds-exist> by funding <b>{funds}</b></only-funds-exist>",
@@ -270,6 +273,9 @@
   "fee-buttons.select.low": "Low",
   "fee-buttons.select.average": "Average",
   "fee-buttons.select.high": "High",
+
+  "fee-buttons.select.slow": "Slow",
+  "fee-buttons.select.fast": "Fast",
 
   "input.recipient.error.invalid-bech32": "Invalid address",
   "input.recipient.error.invalid-evm-address": "Invalid EVM address",

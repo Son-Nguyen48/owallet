@@ -99,7 +99,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd.orai.io',
     chainId: 'Oraichain',
     chainName: 'Oraichain',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'ORAI',
       coinMinimalDenom: 'orai',
@@ -165,50 +165,50 @@ export const EmbedChainInfos: AppChainInfo[] = [
     },
     beta: true // use v1beta1
   },
+  // {
+  //   rpc: 'https://testnet-rpc.orai.io',
+  //   rest: 'https://testnet-lcd.orai.io',
+  //   chainId: 'Oraichain-testnet',
+  //   chainName: 'Oraichain-testnet',
+  //   networkType: "cosmos",
+  //   stakeCurrency: {
+  //     coinDenom: 'ORAI',
+  //     coinMinimalDenom: 'orai',
+  //     coinDecimals: 6,
+  //     coinGeckoId: 'oraichain-token',
+  //     coinImageUrl:
+  //       'https://s2.coinmarketcap.com/static/img/coins/64x64/7533.png'
+  //   },
+  //   bip44: {
+  //     coinType: 118
+  //   },
+  //   bech32Config: Bech32Address.defaultBech32Config('orai'),
+  //   get currencies() {
+  //     return [this.stakeCurrency];
+  //   },
+  //   get feeCurrencies() {
+  //     return [this.stakeCurrency];
+  //   },
+  //   gasPriceStep: {
+  //     low: 0,
+  //     average: 0.000025,
+  //     high: 0.00004
+  //   },
+  //   features: ['stargate', 'no-legacy-stdTx', 'ibc-transfer', 'cosmwasm'],
+  //   chainSymbolImageUrl: 'https://orai.io/images/logos/logomark-dark.png',
+  //   txExplorer: {
+  //     name: 'Oraiscan',
+  //     txUrl: 'https://testnet.scan.orai.io/txs/{txHash}',
+  //     accountUrl: 'https://testnet.scan.orai.io/account/{address}'
+  //   },
+  //   // beta: true // use v1beta1
+  // },
   {
-    rpc: 'https://testnet-rpc.orai.io',
-    rest: 'https://testnet-lcd.orai.io',
-    chainId: 'Oraichain-testnet',
-    chainName: 'Oraichain-testnet',
-    networkType: "cosmos",
-    stakeCurrency: {
-      coinDenom: 'ORAI',
-      coinMinimalDenom: 'orai',
-      coinDecimals: 6,
-      coinGeckoId: 'oraichain-token',
-      coinImageUrl:
-        'https://s2.coinmarketcap.com/static/img/coins/64x64/7533.png'
-    },
-    bip44: {
-      coinType: 118
-    },
-    bech32Config: Bech32Address.defaultBech32Config('orai'),
-    get currencies() {
-      return [this.stakeCurrency];
-    },
-    get feeCurrencies() {
-      return [this.stakeCurrency];
-    },
-    gasPriceStep: {
-      low: 0,
-      average: 0.000025,
-      high: 0.00004
-    },
-    features: ['stargate', 'no-legacy-stdTx', 'ibc-transfer', 'cosmwasm'],
-    chainSymbolImageUrl: 'https://orai.io/images/logos/logomark-dark.png',
-    txExplorer: {
-      name: 'Oraiscan',
-      txUrl: 'https://testnet.scan.orai.io/txs/{txHash}',
-      accountUrl: 'https://testnet.scan.orai.io/account/{address}'
-    }
-    // beta: true // use v1beta1
-  },
-  {
-    chainId: 'oraibridge-subnet',
+    chainId: 'oraibridge-subnet-2',
     chainName: 'OraiBridge',
-    rpc: 'https://bridge.rpc.orai.io',
-    rest: 'https://bridge.lcd.orai.io',
-    networkType: "cosmos",
+    rpc: 'https://bridge-v2.rpc.orai.io',
+    rest: 'https://bridge-v2.lcd.orai.io',
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'ORAIB',
       coinMinimalDenom: 'uoraib',
@@ -222,21 +222,6 @@ export const EmbedChainInfos: AppChainInfo[] = [
     get currencies() {
       return [
         this.stakeCurrency,
-        {
-          coinDenom: 'BEP20 ORAI',
-          coinMinimalDenom: 'gravity0xA325Ad6D9c92B55A3Fc5aD7e412B1518F96441C0',
-          coinDecimals: 18,
-          coinGeckoId: 'oraichain-token',
-          coinImageUrl:
-            'https://s2.coinmarketcap.com/static/img/coins/64x64/7533.png'
-        },
-        {
-          coinDenom: 'BEP20 AIRI',
-          coinMinimalDenom: 'gravity0x7e2A35C746F2f7C240B664F1Da4DD100141AE71F',
-          coinDecimals: 18,
-          coinGeckoId: 'airight',
-          coinImageUrl: 'https://i.ibb.co/m8mCyMr/airi.png'
-        },
         {
           coinDenom: 'BEP20 ORAI',
           coinMinimalDenom: 'oraib0xA325Ad6D9c92B55A3Fc5aD7e412B1518F96441C0',
@@ -267,14 +252,6 @@ export const EmbedChainInfos: AppChainInfo[] = [
           coinGeckoId: 'tether',
           coinImageUrl:
             'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png'
-        },
-        {
-          coinDenom: 'BEP20 USDT',
-          coinMinimalDenom: 'gravity0x55d398326f99059fF775485246999027B3197955',
-          coinDecimals: 18,
-          coinGeckoId: 'tether',
-          coinImageUrl:
-            'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png'
         }
       ];
     },
@@ -293,7 +270,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     evmRpc: 'https://endpoint1.kawaii.global',
     rest: 'https://cosmos1.kawaii.global',
     chainId: 'kawaii_6886-1',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     chainName: 'Kawaiiverse Cosmos',
     stakeCurrency: {
       coinDenom: 'ORAIE',
@@ -400,7 +377,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     chainId: 'balcony_666666-1',
     coinType: 60,
     chainName: 'Balcony Subnet Cosmos',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'ORAIN',
       coinMinimalDenom: 'orain',
@@ -431,7 +408,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-cosmoshub.keplr.app',
     chainId: 'cosmoshub-4',
     chainName: 'Cosmos Hub',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'ATOM',
       coinMinimalDenom: 'uatom',
@@ -480,7 +457,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-osmosis.keplr.app',
     chainId: 'osmosis-1',
     chainName: 'Osmosis',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'OSMO',
       coinMinimalDenom: 'uosmo',
@@ -536,7 +513,7 @@ export const EmbedChainInfos: AppChainInfo[] = [
     rest: 'https://lcd-juno.keplr.app',
     chainId: 'juno-1',
     chainName: 'Juno',
-    networkType: "cosmos",
+    networkType: 'cosmos',
     stakeCurrency: {
       coinDenom: 'JUNO',
       coinMinimalDenom: 'ujuno',

@@ -37,6 +37,12 @@ export const SignPage: FunctionComponent = observer(() => {
 
   const intl = useIntl();
 
+  useEffect(() => {
+    return () => {
+      signInteractionStore.reject();
+    };
+  }, []);
+
   const {
     chainStore,
     keyRingStore,
@@ -196,17 +202,25 @@ export const SignPage: FunctionComponent = observer(() => {
   })();
 
   return (
-    <HeaderLayout
-      showChainName={alternativeTitle == null}
-      alternativeTitle={alternativeTitle != null ? alternativeTitle : undefined}
-      canChangeChainInfo={false}
-      onBackButton={
-        interactionInfo.interactionInternal
-          ? () => {
-              history.goBack();
-            }
-          : undefined
-      }
+    // <HeaderLayout
+    //   showChainName={alternativeTitle == null}
+    //   alternativeTitle={alternativeTitle != null ? alternativeTitle : undefined}
+    //   canChangeChainInfo={false}
+    //   onBackButton={
+    //     interactionInfo.interactionInternal
+    //       ? () => {
+    //           history.goBack();
+    //         }
+    //       : undefined
+    //   }
+    // >
+    <div
+      style={{
+        padding: 20,
+        backgroundColor: '#FFFFFF',
+        height: '100%',
+        overflowX: 'auto'
+      }}
     >
       {
         /*
@@ -215,11 +229,24 @@ export const SignPage: FunctionComponent = observer(() => {
          */
         isLoaded ? (
           <div className={style.container}>
+            <div
+              style={{
+                color: '#353945',
+                fontSize: 24,
+                fontWeight: 500,
+                textAlign: 'center',
+                paddingBottom: 24
+              }}
+            >
+              {chainStore?.current?.raw?.chainName || 'Oraichain'}
+            </div>
             <div className={classnames(style.tabs)}>
               <ul>
-                <li className={classnames({ active: tab === Tab.Details })}>
+                <li className={classnames({ activeTabs: tab === Tab.Details })}>
                   <a
-                    className={style.tab}
+                    className={classnames(style.tab, {
+                      activeText: tab === Tab.Details
+                    })}
                     onClick={() => {
                       setTab(Tab.Details);
                     }}
@@ -229,9 +256,11 @@ export const SignPage: FunctionComponent = observer(() => {
                     })}
                   </a>
                 </li>
-                <li className={classnames({ active: tab === Tab.Data })}>
+                <li className={classnames({ activeTabs: tab === Tab.Data })}>
                   <a
-                    className={style.tab}
+                    className={classnames(style.tab, {
+                      activeText: tab === Tab.Data
+                    })}
                     onClick={() => {
                       setTab(Tab.Data);
                     }}
@@ -278,12 +307,7 @@ export const SignPage: FunctionComponent = observer(() => {
             <div className={style.buttons}>
               {keyRingStore.keyRingType === 'ledger' &&
               signInteractionStore.isLoading ? (
-                <Button
-                  className={style.button}
-                  color="primary"
-                  disabled={true}
-                  outline
-                >
+                <Button className={style.button} disabled={true} outline>
                   <FormattedMessage id="sign.button.confirm-ledger" />{' '}
                   <i className="fa fa-spinner fa-spin fa-fw" />
                 </Button>
@@ -363,6 +387,7 @@ export const SignPage: FunctionComponent = observer(() => {
           </div>
         )
       }
-    </HeaderLayout>
+      {/* </HeaderLayout> */}
+    </div>
   );
 });

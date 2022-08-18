@@ -88,14 +88,17 @@ export const LockPage: FunctionComponent = observer(() => {
         })}
       >
         <Banner
-          icon={require('../../public/assets/svg/oraichain-pro-logo.svg')}
-          logo={require('../../public/assets/img/oraichain-pro.svg')}
+          icon={require('../../public/assets/orai_wallet_logo.png')} 
+          logo={require('../../public/assets/logo.svg')}
           subtitle="Cosmos x EVM in one Wallet"
         />
         <PasswordInput
           label={intl.formatMessage({
             id: 'lock.input.password'
           })}
+          styleInputGroup={{
+            border: '1px solid rgba(8, 4, 28, 0.12)'
+          }}
           name="password"
           error={errors.password && errors.password.message}
           ref={(ref) => {
