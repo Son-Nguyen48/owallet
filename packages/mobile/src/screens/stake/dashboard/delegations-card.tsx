@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useEffect, useState } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../../stores';
 import { StyleSheet, View, ViewStyle } from 'react-native';
@@ -9,7 +9,6 @@ import { ValidatorThumbnail } from '../../../components/thumbnail';
 import { colors, spacing, typography } from '../../../themes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ValidatorThumbnails } from '@owallet/common';
-import { API } from '../../../common/api';
 
 export const DelegationsCard: FunctionComponent<{
   containerStyle?: ViewStyle;

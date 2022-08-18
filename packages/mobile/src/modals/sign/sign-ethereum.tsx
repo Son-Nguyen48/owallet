@@ -4,22 +4,13 @@ import { CardModal } from '../card';
 import { ScrollView, Text, View } from 'react-native';
 import { useStyle } from '../../styles';
 import { useStore } from '../../stores';
-
 import { Button } from '../../components/button';
 import { colors } from '../../themes';
 import Big from 'big.js';
-
 import { observer } from 'mobx-react-lite';
 import { useUnmount } from '../../hooks';
-// import { WCAppLogoAndName } from '../../components/wallet-connect';
-// import WalletConnect from '@walletconnect/client';
-import { navigationRef } from '../../router/root';
 import { TextInput } from '../../components/input';
-import {
-  useFeeEthereumConfig,
-  useGasEthereumConfig,
-  useMemoConfig
-} from '@owallet/hooks';
+import { useFeeEthereumConfig, useGasEthereumConfig } from '@owallet/hooks';
 import { FeeEthereumInSign } from './fee-ethereum';
 
 export const SignEthereumModal: FunctionComponent<{
@@ -34,12 +25,6 @@ export const SignEthereumModal: FunctionComponent<{
     });
 
     const [isInternal, setIsInternal] = useState(false);
-
-    // Check that the request is from the wallet connect.
-    // If this is undefiend, the request is not from the wallet connect.
-    // const [wcSession, setWCSession] = useState<
-    //   WalletConnect['session'] | undefined
-    // >();
 
     const current = chainStore.current;
     // Make the gas config with 1 gas initially to prevent the temporary 0 gas error at the beginning.
@@ -72,8 +57,6 @@ export const SignEthereumModal: FunctionComponent<{
             .div(new Big(10).pow(decimals.current))
             .toFixed(decimals.current);
 
-          console.log(estimatedGasPrice, '');
-
           if (!isNaN(estimatedGasLimit) && estimatedGasPrice !== 'NaN') {
             setGasPrice(estimatedGasPrice);
             gasConfig.setGas(estimatedGasLimit);
@@ -89,20 +72,15 @@ export const SignEthereumModal: FunctionComponent<{
       }
     }, [dataSign]);
 
-    // const memoConfig = useMemoConfig(chainStore, current.chainId);
-
     useEffect(() => {
       if (signInteractionStore.waitingEthereumData) {
         setDataSign(signInteractionStore.waitingEthereumData);
       }
     }, [signInteractionStore.waitingEthereumData]);
 
-    // const [fee, setFee] = useState<string>('0x0');
     const [memo, setMemo] = useState<string>('');
 
     const style = useStyle();
-
-    // const [chainId, setChainId] = useState(chainStore.current.chainId);
 
     // Make the gas config with 1 gas initially to prevent the temporary 0 gas error at the beginning.
 
@@ -123,12 +101,6 @@ export const SignEthereumModal: FunctionComponent<{
 
     return (
       <CardModal title="Confirm Ethereum Transaction">
-        {/* {wcSession ? (
-          <WCAppLogoAndName
-            containerStyle={style.flatten(['margin-y-14'])}
-            peerMeta={wcSession.peerMeta}
-          />
-        ) : null} */}
         <View style={style.flatten(['margin-bottom-16'])}>
           <Text style={style.flatten(['margin-bottom-3'])}>
             <Text style={style.flatten(['subtitle3', 'color-primary'])}>
@@ -137,7 +109,7 @@ export const SignEthereumModal: FunctionComponent<{
             <Text
               style={style.flatten(['subtitle3', 'color-text-black-medium'])}
             >
-              Messages
+              Message
             </Text>
           </Text>
           <View
@@ -163,13 +135,6 @@ export const SignEthereumModal: FunctionComponent<{
           }}
           defaultValue={''}
         />
-        {/* <TextInput
-          label="Fee"
-          onChangeText={txt => {
-            setFee(txt);
-          }}
-          defaultValue={'0x0'}
-        /> */}
 
         <FeeEthereumInSign
           feeConfig={feeConfig}
