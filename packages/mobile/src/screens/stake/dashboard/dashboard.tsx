@@ -36,9 +36,12 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
     })();
   }, []);
 
-  const staked = queries.cosmos.queryDelegations.getQueryBech32Address(
-    account.bech32Address
-  ).total;
+  const staked =
+    chainStore.current.networkType === 'cosmos'
+      ? queries.cosmos.queryDelegations.getQueryBech32Address(
+          account.bech32Address
+        ).total
+      : null;
 
   return (
     <PageWithScrollViewInBottomTabView>
@@ -64,31 +67,34 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
             <MyRewardCard />
           ) : null}
 
-          <View
-            style={{
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              marginTop: spacing['32']
-            }}
-          >
-            <TouchableOpacity
+          {chainStore.current.networkType === 'cosmos' ? (
+            <View
               style={{
-                ...styles.containerBtnClaim,
-                height: 40
-              }}
-              onPress={() => {
-                smartNavigation.navigate('Validator.List', {});
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                marginTop: spacing['32']
               }}
             >
-              <Text
+              <TouchableOpacity
                 style={{
-                  ...typography.h7,
-                  fontWeight: '700',
-                  color: colors['white']
+                  ...styles.containerBtnClaim,
+                  height: 40
                 }}
-              >{`Stake now`}</Text>
-            </TouchableOpacity>
-          </View>
+                onPress={() => {
+                  smartNavigation.navigate('Validator.List', {});
+                }}
+              >
+                <Text
+                  style={{
+                    ...typography.h7,
+                    fontWeight: '700',
+                    color: colors['white']
+                  }}
+                >{`Stake now`}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
+
           <View
             style={{
               position: 'absolute',
@@ -109,27 +115,30 @@ export const StakingDashboardScreen: FunctionComponent = observer(() => {
         </View>
 
         <View>
-          <View
-            style={{
-              ...styles.containerTitle
-            }}
-          >
-            <Text
+          {chainStore.current.networkType === 'cosmos' ? (
+            <View
               style={{
-                ...typography.h6,
-                fontWeight: '600'
+                ...styles.containerTitle
               }}
             >
               <Text
                 style={{
-                  fontWeight: '400'
+                  ...typography.h6,
+                  fontWeight: '600'
                 }}
               >
-                Total stake:{' '}
+                <Text
+                  style={{
+                    fontWeight: '400'
+                  }}
+                >
+                  Total stake:{' '}
+                </Text>
+                {`${staked.maxDecimals(6).trim(true).shrink(true).toString()}`}
               </Text>
-              {`${staked.maxDecimals(6).trim(true).shrink(true).toString()}`}
-            </Text>
-          </View>
+            </View>
+          ) : null}
+
           {chainStore.current.networkType === 'cosmos' ? (
             <DelegationsCard validatorList={validators} />
           ) : null}
