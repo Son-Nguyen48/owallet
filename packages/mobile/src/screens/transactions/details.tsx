@@ -270,7 +270,7 @@ export const TransactionDetail: FunctionComponent<any> = () => {
     },
     {
       label: 'Amount',
-      value: `${convertAmount(amount)} ${denom}`
+      value: `${convertAmount(amount)} ${denom ?? ''}`
     }
   ];
 
@@ -295,7 +295,7 @@ export const TransactionDetail: FunctionComponent<any> = () => {
     },
     {
       label: 'Amount',
-      value: `${convertAmount(amount)} ${denom}`
+      value: `${convertAmount(amount)} ${denom ?? ''}`
     },
     {
       label: 'Time',

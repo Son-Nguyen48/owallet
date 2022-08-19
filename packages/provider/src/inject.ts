@@ -516,7 +516,7 @@ export class InjectedEthereum implements Ethereum {
         var result: any;
         const chainId =
           message.args[1] ??
-          window.localStorage.getItem('owallet.chainId') ??
+          (await window.localStorage.getItem('owallet.chainId')) ??
           ethereum.initChainId;
 
         // console.log("🚀 ~ file: inject.ts ~ line 524 ~ InjectedEthereum ~ eventListener.addMessageListener ~ message.method", message.method)
