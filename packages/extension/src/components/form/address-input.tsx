@@ -146,9 +146,7 @@ export const AddressInput: FunctionComponent<AddressInputProps> = observer(
             </Label>
           ) : null}
           <InputGroup
-            style={{
-              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
-            }}
+            className={styleAddressInput.inputGroup}
           >
             <Input
               id={inputId}

@@ -159,9 +159,9 @@
 
   "register.verify.button.register": "Register",
 
-  "register.welcome.title": "You’re all set!",
-  "register.welcome.content": "Open the extension and sign in to begin your interchain journey.",
-  "register.welcome.button.done": "Done",
+  "register.welcome.title": "It's good to go now!",
+  "register.welcome.content": "Remember to sign out or even remove your account to protect it.",
+  "register.welcome.button.done": "Got it!",
 
   "chain.suggested.title": "Chain Add Request",
   "chain.suggested.paragraph": "<b>{host}</b> would like to add blockchain <b>{chainId}</b> to OWallet.",

@@ -268,14 +268,11 @@ export const TokensView: FunctionComponent<{
       <div>
         <Input
           type={'text'}
-          styleInputGroup={{
-            display: 'flex',
-            flexDirection: 'row-reverse'
-          }}
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
           }}
+          classNameInputGroup={styleToken.inputGroup}
           placeholder={'Search Chain Coin'}
           append={
             <div

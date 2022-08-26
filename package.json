@@ -56,7 +56,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
     "eslint-plugin-unicorn": "^24.0.0",
-    "firebase-tools": "^11.7.0",
+    "firebase-tools": "^10.2.2",
     "jest": "^26.6.3",
     "lerna": "^3.22.1",
     "lint-staged": "^10.5.4",
@@ -72,7 +72,7 @@
   },
   "resolutions": {
     "@types/react": "^16.14.4",
-    "@cosmjs/crypto": "^0.28.11",
+    "@cosmjs/crypto": "^0.24.0-alpha.25",
     "@iov/crypto": "2.1.0",
     "libsodium": "file:./etc/noop",
     "libsodium-wrappers": "file:./etc/noop",

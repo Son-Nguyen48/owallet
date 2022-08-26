@@ -218,12 +218,8 @@ export const AddTokenPage: FunctionComponent = observer(() => {
           label={intl.formatMessage({
             id: 'setting.token.add.contract-address'
           })}
-          styleInputGroup={{
-            boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
-          }}
-          style={{
-            color: '#000'
-          }}
+          classNameInputGroup={style.inputGroup}
+          className={style.input}
           name="contractAddress"
           autoComplete="off"
           readOnly={tokensStore.waitingSuggestedToken != null}

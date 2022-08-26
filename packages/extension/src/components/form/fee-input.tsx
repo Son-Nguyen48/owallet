@@ -19,7 +19,9 @@ export interface GasInputProps {
   defaultValue?: number;
   gasPrice?: number | string | Big;
 
-  denom?: any;
+  denom?: string | unknown | any;
+  classNameInputGroup?: string | unknown | any;
+  classNameInput?: string | unknown | any;
 }
 
 // TODO: Handle the max block gas limit(?)
@@ -32,7 +34,9 @@ export const FeeInput: FunctionComponent<GasInputProps> = observer(
     gasConfig,
     gasPrice,
     decimals,
-    denom
+    denom,
+    classNameInputGroup,
+    classNameInput
   }) => {
     const [inputId] = useState(() => {
       const bytes = new Uint8Array(4);
@@ -61,16 +65,15 @@ export const FeeInput: FunctionComponent<GasInputProps> = observer(
         ) : null}
         <InputEvm
           type="number"
-          styleInputGroup={{
-            boxShadow: '0 1px 3px rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%)'
-          }}
+          classNameInputGroup={classNameInputGroup}
           value={parseFloat(feeConfig.feeRaw)}
-          style={{
-            backgroundColor: 'rgba(230, 232, 236, 0.2)'
-          }}
+          className={classNameInput}
+          // style={{
+          //   backgroundColor: 'rgba(230, 232, 236, 0.2)'
+          // }}
           onChange={(e) => {
             feeConfig.setFee(e.target.value);
-            e.preventDefault()
+            e.preventDefault();
           }}
           id={inputId}
           append={

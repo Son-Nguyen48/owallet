@@ -200,7 +200,7 @@ export const SettingPage: FunctionComponent = observer(() => {
           })}
           paragraph={paragraphFiat}
           modalBody={
-            <div style={{ padding: 10 }}>
+            <div style={{ padding: 10, height: 250, overflow: 'auto' }}>
               {Object.keys(priceStore.supportedVsCurrencies).map((currency) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const fiatCurrency =

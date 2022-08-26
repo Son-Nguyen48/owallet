@@ -35,9 +35,11 @@ import { GasEthereumInput } from '../../components/form/gas-ethereum-input';
 import { FeeInput } from '../../components/form/fee-input';
 import axios from 'axios';
 
-export const SendEvmPage: FunctionComponent = observer(() => {
+export const SendEvmPage: FunctionComponent<{
+  coinMinimalDenom?: string;
+}> = observer(({ coinMinimalDenom }) => {
   const history = useHistory();
-  let search = useLocation().search;
+  let search = useLocation().search || coinMinimalDenom || '';
   if (search.startsWith('?')) {
     search = search.slice(1);
   }
@@ -57,6 +59,12 @@ export const SendEvmPage: FunctionComponent = observer(() => {
   }, []);
 
   const intl = useIntl();
+  const inputRef = React.useRef(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [coinMinimalDenom]);
 
   const notification = useNotification();
 
@@ -222,7 +230,7 @@ export const SendEvmPage: FunctionComponent = observer(() => {
     //   }
     // >
     // console.log({ sendConfigs: sendConfigs.amountConfig});
-    
+
     <>
       <form
         className={style.formContainer}
@@ -327,6 +335,7 @@ export const SendEvmPage: FunctionComponent = observer(() => {
         <div className={style.formInnerContainer}>
           <div>
             <AddressInput
+              inputRef={inputRef}
               recipientConfig={sendConfigs.recipientConfig}
               memoConfig={sendConfigs.memoConfig}
               label={intl.formatMessage({ id: 'send.input.recipient' })}
@@ -360,11 +369,8 @@ export const SendEvmPage: FunctionComponent = observer(() => {
               gasPrice={gasPrice}
               decimals={decimals}
               denom={sendConfigs.feeConfig}
-              // defaultValue={
-              //   parseInt(dataSign?.data?.data?.data?.estimatedGasLimit, 16) *
-              //     parseInt(dataSign?.data?.data?.data?.estimatedGasPrice, 16) ||
-              //   0
-              // }
+              classNameInput={style.input}
+              classNameInputGroup={style.inputGroup}
             />
             {/* <FeeButtons
               feeConfig={sendConfigs.feeConfig}

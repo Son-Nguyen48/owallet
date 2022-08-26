@@ -62,9 +62,7 @@ export const AddAddressModal: FunctionComponent<{
             type="text"
             label={intl.formatMessage({ id: 'setting.address-book.name' })}
             autoComplete="off"
-            styleInputGroup={{
-              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
-            }}
+            classNameInputGroup={style.inputGroup}
             value={name}
             onChange={(e) => {
               setName(e.target.value);

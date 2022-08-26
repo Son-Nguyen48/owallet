@@ -1,3 +1,6 @@
+@import '../../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/functions';
+@import '../../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/mixins';
+@import '../../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/variables';
 @import '../../../styles/var';
 
 .inner-top-container {
@@ -54,7 +57,6 @@
   box-shadow: 0px 4px 20px #d5dfe4;
 }
 
-
 .button-save {
   width: 50%;
   background-color: $primary-color !important;
@@ -63,7 +65,6 @@
     color: $primary-color;
   }
 }
-
 
 .popover-item {
   cursor: pointer;
@@ -93,4 +94,30 @@
   flex-direction: column;
 }
 
+// input
+.input {
+  border-radius: 4px;
+  background-color: rgba(230, 232, 236, 0.2);
+  color: $color-neutral-2 !important;
 
+  &::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $color-gray-70 !important;
+    opacity: 1 !important; /* Firefox */
+  }
+
+  &:focus {
+    background-color: rgba(230, 232, 236, 0.2);
+    border-radius: 4px;
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: rgba(230, 232, 236, 0.2);
+  box-shadow: 0 1px 3px rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%);
+  &:focus-within {
+    box-shadow: $input-focus-alternative-box-shadow !important;
+  }
+}

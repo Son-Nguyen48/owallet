@@ -217,7 +217,7 @@ export const LinkStakeView: FunctionComponent = observer(() => {
         <span
           aria-disabled={!isStakableExist}
           ref={stakeBtnRef}
-          style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          style={{ cursor: 'pointer', textDecoration: 'underline', fontSize: 14 , fontWeight: 500 , color: '#434193' }}
         >
           <FormattedMessage id="main.stake.button.link-stake" />
         </span>

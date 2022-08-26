@@ -1,4 +1,7 @@
 @import "../../styles/var";
+@import "../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/functions";
+@import "../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/mixins";
+@import "../../../../../node_modules/argon-dashboard-react/src/assets/scss/argon-dashboard/custom/variables";
 
 .token-container {
   display: flex;
@@ -82,5 +85,30 @@
     color: $color-gray-92;
 
     margin-bottom: 12px;
+  }
+}
+
+
+.input {
+  color: $color-gray-70 !important;
+  &::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $color-gray-70 !important;
+    opacity: 1 !important; /* Firefox */
+  }
+
+  &:focus {
+    box-shadow: $input-focus-alternative-box-shadow !important;
+    border-radius: 4px;
+  }
+}
+
+
+.input-group {
+  display: flex;
+  flex-direction: row-reverse;
+  box-shadow: 0 1px 3px rgb(50 50 93 / 15%), 0 1px 0 rgb(0 0 0 / 2%);
+  &:focus-within {
+    box-shadow: $input-focus-alternative-box-shadow !important;
   }
 }

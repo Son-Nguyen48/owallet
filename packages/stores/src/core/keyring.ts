@@ -22,7 +22,8 @@ import {
   KeyRing,
   CheckPasswordMsg,
   ExportKeyRingData,
-  ExportKeyRingDatasMsg
+  ExportKeyRingDatasMsg,
+  ChangeChainMsg
 } from '@owallet/background';
 
 import { computed, flow, makeObservable, observable, runInAction } from 'mobx';
@@ -247,8 +248,11 @@ export class KeyRingStore {
     const msg = new AddLedgerKeyMsg(kdf, meta, bip44HDPath);
     const result = (yield* toGenerator(
       this.requester.sendMessage(BACKGROUND_PORT, msg)
-    )).multiKeyStoreInfo
-    console.log("🚀 ~ file: keyring.ts ~ line 251 ~ KeyRingStore ~ result", result)
+    )).multiKeyStoreInfo;
+    console.log(
+      '🚀 ~ file: keyring.ts ~ line 251 ~ KeyRingStore ~ result',
+      result
+    );
     this.multiKeyStoreInfo = result;
   }
 
@@ -398,6 +402,13 @@ export class KeyRingStore {
       BACKGROUND_PORT,
       new ExportKeyRingDatasMsg(password)
     );
+  }
+
+  @flow
+  *changeChain(chainInfos: Object = {}) {
+    const msg = new ChangeChainMsg(chainInfos);
+    yield* toGenerator(this.requester.sendMessage(BACKGROUND_PORT, msg));
+    this.dispatchKeyStoreChangeEvent();
   }
 
   protected dispatchKeyStoreChangeEvent() {

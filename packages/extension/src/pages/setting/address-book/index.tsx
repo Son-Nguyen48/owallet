@@ -229,7 +229,7 @@ export const AddressBookPage: FunctionComponent<{
                   alt=""
                   style={{ marginRight: 4 }}
                 />
-                <span style={{ fontSize: 12, fontWeight: 600}}>
+                <span style={{ fontSize: 12, fontWeight: 600 }}>
                   <FormattedMessage id="setting.address-book.button.add" />
                 </span>
               </div>
@@ -238,14 +238,8 @@ export const AddressBookPage: FunctionComponent<{
           <div>
             <Input
               type={'text'}
-              styleInputGroup={{
-                display: 'flex',
-                flexDirection: 'row-reverse',
-                backgroundColor: 'rgba(230, 232, 236, 0.2)'
-              }}
-              style={{
-                backgroundColor: 'rgba(230, 232, 236, 0.2)'
-              }}
+              classNameInputGroup={styleAddressBook.inputGroup}
+              className={styleAddressBook.input}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -312,6 +306,17 @@ export const AddressBookPage: FunctionComponent<{
                       : data.address
                   }
                   subParagraph={data.memo}
+                  styleParagraph={{
+                    maxWidth: 220,
+                    fontWeight: 500,
+                    fontSize: 14,
+                    color: '#777E90'
+                  }}
+                  styleTitle={{
+                    fontWeight: 600,
+                    fontSize: 14,
+                    color: '#353945'
+                  }}
                   // icons={addressBookIcons(i, data.name)}
                   data-index={i}
                   icons={[

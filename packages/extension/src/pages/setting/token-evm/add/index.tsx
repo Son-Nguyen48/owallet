@@ -99,21 +99,7 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
   };
 
   return (
-    // <HeaderLayout
-    //   showChainName={false}
-    //   canChangeChainInfo={false}
-    //   alternativeTitle={intl.formatMessage({
-    //     id: 'setting.token.add'
-    //   })}
-    //   onBackButton={
-    //     interactionInfo.interaction
-    //       ? undefined
-    //       : () => {
-    //           history.goBack();
-    //         }
-    //   }
-    // >
-    <>
+    <div style={{ padding: 20 }}>
       <Form
         className={style.container}
         onSubmit={form.handleSubmit(async (data) => {
@@ -229,6 +215,8 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
           label={intl.formatMessage({
             id: 'setting.token.add.contract-address'
           })}
+          classNameInputGroup={style.inputGroup}
+          className={style.input}
           name="contractAddress"
           autoComplete="off"
           readOnly={tokensStore.waitingSuggestedToken != null}
@@ -259,6 +247,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          styleInputGroup={{
+            boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
+          }}
           style={{
             color: '#353945'
           }}
@@ -270,6 +261,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          styleInputGroup={{
+            boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
+          }}
           style={{
             color: '#353945'
           }}
@@ -281,6 +275,9 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
         />
         <Input
           type="text"
+          styleInputGroup={{
+            boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
+          }}
           style={{
             color: '#353945'
           }}
@@ -341,7 +338,6 @@ export const AddEvmTokenPage: FunctionComponent = observer(() => {
           <FormattedMessage id="setting.token.add.button.submit" />
         </Button>
       </Form>
-      {/* </HeaderLayout> */}
-    </>
+    </div>
   );
 });

@@ -17,6 +17,7 @@ import { IBCTransferView } from '../main/ibc-transfer';
 import { IBCTransferPage } from '../../pages/ibc-transfer';
 import { SendPage } from '../send';
 import { SelectChain } from '../../layouts/header';
+import { SendEvmPage } from '../send-evm';
 
 export const TokenPage: FunctionComponent = observer(() => {
   const { chainStore, accountStore, queriesStore, uiConfigStore } = useStore();
@@ -102,7 +103,11 @@ export const TokenPage: FunctionComponent = observer(() => {
                     setCoinMinimalDenom('');
                   }}
                 />
-                <SendPage coinMinimalDenom={coinMinimalDenom} />
+                {chainStore.current.networkType === 'evm' ? (
+                  <SendEvmPage coinMinimalDenom={coinMinimalDenom} />
+                ) : (
+                  <SendPage coinMinimalDenom={coinMinimalDenom} />
+                )}
               </div>
             </>
           ) : null}

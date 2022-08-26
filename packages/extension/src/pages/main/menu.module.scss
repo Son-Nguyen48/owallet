@@ -15,7 +15,10 @@
   padding: 20px;
   font-size: 18px;
   font-weight: bold;
-  &:hover,
+  &:hover {
+    color: $color;
+    font-weight: bold;
+  }
   &:active {
     color: $color-lighter;
   }

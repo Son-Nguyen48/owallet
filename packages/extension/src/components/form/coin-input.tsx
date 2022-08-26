@@ -42,7 +42,7 @@ export interface CoinInputProps {
 }
 
 const reduceStringAssets = (str) => {
-  return str && str.split('(')[0] || '';
+  return (str && str.split('(')[0]) || '';
 };
 
 export const CoinInput: FunctionComponent<CoinInputProps> = observer(
@@ -217,11 +217,7 @@ export const CoinInput: FunctionComponent<CoinInputProps> = observer(
               ) : null}
             </Label>
           ) : null}
-          <InputGroup
-            style={{
-              boxShadow: '0px 2px 4px 1px rgba(8, 4, 28, 0.12)'
-            }}
-          >
+          <InputGroup className={styleCoinInput.inputGroup}>
             <Input
               className={classnames(
                 'form-control-alternative',
