@@ -18,6 +18,7 @@ OWallet is a non-custodial blockchain wallets for webpages that allow users to i
 - Private keys are stored locally. This removes the friction and risk of webpages having to manage user private keys safely and securely.
 - As the user's private key is not managed by the website, users do not have to worry about the level of security of the website. The user only has to trust the security guarantees of OWallet, and freely interact with various web applications as they wish (and verify the contents of the transaction).
 - OWallet can easily connect to libraries such as CosmJS, simplifying the process of connecting webpages to blockchains.
+- OWallet is a perfect wallet for anyone, just need to know how to use the internet and a few small insights and you can completely move into a new future. Use OWallet today.
 
 ## Sections
 [Integrate with OWallet](./api) describes how to integrate with OWallet in the webpage.  
